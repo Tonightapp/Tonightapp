@@ -1086,7 +1086,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
 .cm-field label{font-size:12px;font-weight:600;color:var(--text2);letter-spacing:.3px;}
 .cm-req{color:#f5c842;}
 .cm-req-soft{color:var(--text3);font-weight:400;}
-.cm-field input,.cm-field select,.cm-field textarea{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 14px;font-size:14px;color:#fff;font-family:inherit;outline:none;transition:border-color .15s;width:100%;}
+.cm-field input,.cm-field select,.cm-field textarea{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 14px;font-size:16px;color:#fff;font-family:inherit;outline:none;transition:border-color .15s;width:100%;}
 .cm-field input:focus,.cm-field select:focus,.cm-field textarea:focus{border-color:rgba(245,200,66,.5);background:rgba(255,255,255,.07);}
 .cm-field input::placeholder,.cm-field textarea::placeholder{color:rgba(255,255,255,.25);}
 .cm-field select option{background:#141525;color:#fff;}
@@ -1152,7 +1152,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
 .le-field{display:flex;flex-direction:column;gap:5px;}
 .le-full{grid-column:1/-1;}
 .le-field label{font-size:12px;font-weight:600;color:var(--text2);}
-.le-field input,.le-field select,.le-field textarea{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;transition:border-color .15s;width:100%;}
+.le-field input,.le-field select,.le-field textarea{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:10px 12px;font-size:16px;color:#fff;font-family:inherit;outline:none;transition:border-color .15s;width:100%;}
 .le-field input:focus,.le-field select:focus,.le-field textarea:focus{border-color:rgba(0,208,132,.4);background:rgba(255,255,255,.07);}
 .le-field input::placeholder,.le-field textarea::placeholder{color:rgba(255,255,255,.22);}
 .le-field select option{background:#141525;}
@@ -1160,7 +1160,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
 .le-submit{padding:14px;border-radius:12px;background:linear-gradient(135deg,#00d084,#00a86b);color:#000;font-size:14px;font-weight:800;border:none;cursor:pointer;font-family:inherit;transition:.15s;margin-top:4px;letter-spacing:.2px;}
 .le-submit:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,208,132,.3);}
 .le-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;}
-@media(max-width:640px){.le-row{grid-template-columns:1fr;}.le-form{padding:16px 16px 20px;max-height:62vh;}.le-header{padding:20px 16px 14px;}.le-title{font-size:18px;}}
+@media(max-width:640px){.le-row{grid-template-columns:1fr;}.le-form{padding:16px 16px calc(20px + env(safe-area-inset-bottom));max-height:62vh;}.le-header{padding:20px 16px 14px;}.le-title{font-size:18px;}}
 
 /* ── DEAL CLAIM MODAL ── */
 .deal-modal-header{padding:28px 24px 20px;background:linear-gradient(160deg,#0d1220,#111827);border-bottom:1px solid rgba(255,255,255,.07);position:relative;}
@@ -1210,7 +1210,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
 .cm-privacy{font-size:11px;color:var(--text3);text-align:center;margin-top:2px;}
 @media(max-width:640px){
   .cm-header{padding:22px 16px 18px;}
-  .cm-form{padding:16px 16px 16px;max-height:62vh;}
+  .cm-form{padding:16px 16px calc(16px + env(safe-area-inset-bottom));max-height:62vh;}
   .cm-title{font-size:21px;}
   .cm-dial{width:90px!important;}
   .cm-social-btn{font-size:12px;padding:10px 12px;}
@@ -1810,49 +1810,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
 </div>
 
 <!-- ════ FOR PROFESSIONALS SECTION ════ -->
-<section class="pros-section">
-  <div class="container">
-    <div class="pros-grid">
-      <div class="pros-left">
-        <div class="pros-tag">For Professionals</div>
-        <h2 class="pros-headline">Run a bar, club or venue?<br><span class="pros-gold">List your events free.</span></h2>
-        <p class="pros-sub">Reach thousands of nightlife lovers across Ho Chi Minh City, Hanoi and Da Nang. No account needed — just fill in your event details and we'll list it.</p>
-        <div class="pros-features">
-          <div class="pros-feat"><span class="pros-feat-ico">🆓</span><span>Free to list — always</span></div>
-          <div class="pros-feat"><span class="pros-feat-ico">📱</span><span>Reach mobile users instantly</span></div>
-          <div class="pros-feat"><span class="pros-feat-ico">🎯</span><span>Targeted to your city & genre</span></div>
-          <div class="pros-feat"><span class="pros-feat-ico">📋</span><span>Guestlist management built-in</span></div>
-          <div class="pros-feat"><span class="pros-feat-ico">🔥</span><span>Push live deals & promotions</span></div>
-          <div class="pros-feat"><span class="pros-feat-ico">📊</span><span>See who's interested before the night</span></div>
-        </div>
-        <button class="pros-cta" onclick="openListEvent()">List Your Event — Free →</button>
-      </div>
-      <div class="pros-right">
-        <div class="pros-card">
-          <div class="pros-card-icon">🏢</div>
-          <div class="pros-card-title">Bar & Restaurant</div>
-          <div class="pros-card-desc">Happy hours, live music, themed nights, private events</div>
-        </div>
-        <div class="pros-card">
-          <div class="pros-card-icon">🎛</div>
-          <div class="pros-card-title">Night Club</div>
-          <div class="pros-card-desc">DJ sets, guestlists, VIP tables, resident nights</div>
-        </div>
-        <div class="pros-card">
-          <div class="pros-card-icon">🎤</div>
-          <div class="pros-card-title">Concert & Festival</div>
-          <div class="pros-card-desc">Live bands, international artists, multi-stage festivals</div>
-        </div>
-        <div class="pros-card">
-          <div class="pros-card-icon">🌅</div>
-          <div class="pros-card-title">Rooftop & Beach</div>
-          <div class="pros-card-desc">Sunset sessions, pool parties, outdoor events</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ════ FOOTER ════ -->
 <!-- ════ USER VALUE SECTION ════ -->
 <section class="uv-section">
@@ -2052,7 +2009,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
       <h2 class="deal-modal-title" id="dealTitle">Deal Title</h2>
       <div class="deal-modal-venue" id="dealVenue">Venue · City</div>
     </div>
-    <div style="padding:20px 24px 24px">
+    <div style="padding:20px 24px calc(24px + env(safe-area-inset-bottom))">
       <div class="deal-code-box">
         <div class="deal-code-label">Show this at the door</div>
         <div class="deal-code" id="dealCode">TN-DEAL-0000</div>
@@ -2074,7 +2031,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
 
 <!-- ════ GATEWAY MODAL ════ -->
 <div class="overlay" id="gatewayOverlay">
-  <div class="modal" style="max-width:360px;padding:32px 24px 28px;position:relative;text-align:center">
+  <div class="modal" style="max-width:360px;padding:32px 24px calc(28px + env(safe-area-inset-bottom));position:relative;text-align:center">
     <button class="mclose" onclick="closeOverlay('gatewayOverlay')" style="position:absolute;top:14px;right:14px">✕</button>
     <div style="font-size:22px;font-family:'Bebas Neue',sans-serif;letter-spacing:3px;color:#fff;margin-bottom:4px">Tonight</div>
     <div style="font-size:13px;color:var(--text3);margin-bottom:28px">Who are you?</div>
@@ -2110,7 +2067,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
         <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2)"><span style="color:#00d084;font-size:14px">✓</span> Track RSVPs and audience interest</div>
       </div>
     </div>
-    <div style="padding:20px 24px 24px">
+    <div style="padding:20px 24px calc(24px + env(safe-area-inset-bottom))">
       <form onsubmit="submitProSignup(event)">
         <div class="fg"><label>Your Name <span class="cm-req">*</span></label><input class="fi" id="psName" type="text" placeholder="Full name" required autocomplete="name"/></div>
         <div class="fg"><label>Business / Venue Name <span class="cm-req">*</span></label><input class="fi" id="psBiz" type="text" placeholder="e.g. Lush Nightclub, Apocalypse Club" required/></div>
@@ -2250,6 +2207,41 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
       <div>
         <p style="font-size:15px;color:var(--text);line-height:1.8;font-weight:300;margin-bottom:12px">We pushed a happy hour deal at 5PM and had 40 extra people walk in by 7PM. Tonight users are <strong style="color:#fff">already looking</strong> — you just need to show up.</p>
         <div style="font-size:12px;color:var(--text3);font-weight:500">— Dong Chi Bar, Ho Chi Minh City &nbsp;·&nbsp; <span style="color:var(--green)">Listed on Tonight</span></div>
+      </div>
+    </div>
+
+    <!-- Who is this for -->
+    <div style="margin-bottom:48px">
+      <h3 style="font-size:22px;font-weight:700;color:#fff;margin-bottom:8px;text-align:center">Who is Tonight for?</h3>
+      <p style="font-size:14px;color:var(--text3);text-align:center;margin-bottom:24px;font-weight:300">Any venue that hosts events, deals or nightlife experiences in Vietnam.</p>
+      <div class="pros-right" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="pros-card">
+          <div class="pros-card-icon">🏢</div>
+          <div class="pros-card-title">Bar &amp; Restaurant</div>
+          <div class="pros-card-desc">Happy hours, live music, themed nights, private events</div>
+        </div>
+        <div class="pros-card">
+          <div class="pros-card-icon">🎛</div>
+          <div class="pros-card-title">Night Club</div>
+          <div class="pros-card-desc">DJ sets, guestlists, VIP tables, resident nights</div>
+        </div>
+        <div class="pros-card">
+          <div class="pros-card-icon">🎤</div>
+          <div class="pros-card-title">Concert &amp; Festival</div>
+          <div class="pros-card-desc">Live bands, international artists, multi-stage festivals</div>
+        </div>
+        <div class="pros-card">
+          <div class="pros-card-icon">🌅</div>
+          <div class="pros-card-title">Rooftop &amp; Beach</div>
+          <div class="pros-card-desc">Sunset sessions, pool parties, outdoor events</div>
+        </div>
+      </div>
+      <div style="margin-top:24px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center">
+          <div><div style="font-size:28px;font-weight:800;color:#f5c842">🆓</div><div style="font-size:13px;font-weight:600;color:#fff;margin-top:6px">Free to list — always</div></div>
+          <div><div style="font-size:28px;font-weight:800;color:#f5c842">📱</div><div style="font-size:13px;font-weight:600;color:#fff;margin-top:6px">Reach mobile users instantly</div></div>
+          <div><div style="font-size:28px;font-weight:800;color:#f5c842">📋</div><div style="font-size:13px;font-weight:600;color:#fff;margin-top:6px">Built-in guestlist tools</div></div>
+        </div>
       </div>
     </div>
 
@@ -5257,6 +5249,25 @@ function renderBottomTabBar(){
 
 // ── LIST YOUR EVENT ───────────────────────────────────────────────────────
 
+// ── Email delivery (formsubmit.co → tonightapp1@gmail.com) ───────────────
+// Fires on every sign-up / event submission. First call triggers a one-time
+// activation email from formsubmit.co — click the link to confirm the address.
+async function _sendToEmail(data){
+  try{
+    await fetch(FORMSUBMIT_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify({ ...data, _subject: `Tonight — ${data.source || 'submission'}: ${data.name || data.businessName || ''}` })
+    });
+  }catch(err){ console.warn('Email send failed, data saved locally:', err); }
+  // Also try optional Google Sheets webhook
+  if(COMMUNITY_WEBHOOK && COMMUNITY_WEBHOOK !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL'){
+    try{
+      await fetch(COMMUNITY_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    }catch(_){}
+  }
+}
+
 function openListEvent(){
   closeOverlay('communityOverlay');
   openOverlay('listEventOverlay');
@@ -5302,15 +5313,7 @@ async function submitListEvent(e){
   btn.disabled = true;
   label.textContent = 'Submitting…';
 
-  if(COMMUNITY_WEBHOOK && COMMUNITY_WEBHOOK !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL'){
-    try{
-      await fetch(COMMUNITY_WEBHOOK,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify(data)
-      });
-    }catch(err){ console.warn('Webhook failed, saved locally:', err); }
-  }
+  await _sendToEmail(data);
 
   // Success screen
   document.getElementById('listEventForm').innerHTML = `
@@ -5365,12 +5368,19 @@ function openDealDirections(){
 
 // ── COMMUNITY SIGN-UP ─────────────────────────────────────────────────────
 
-// ↓ Paste your Google Apps Script Web App URL here after deploying
+// Primary email delivery — formsubmit.co sends every submission to tonightapp1@gmail.com
+// No server or account needed. First submission triggers a one-time activation email.
+const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/tonightapp1@gmail.com';
+
+// Optional: paste your Google Apps Script Web App URL here for Google Sheets logging
 const COMMUNITY_WEBHOOK = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
 
-// ─── SOCIAL SIGN-IN CONFIG ───────────────────────────────────────────────
-// Replace with your actual Google Client ID from console.cloud.google.com
-// Create OAuth 2.0 credentials → Web application → add your domain to origins
+// ─── GOOGLE SIGN-IN ──────────────────────────────────────────────────────
+// To enable real Google OAuth:
+//   1. Go to console.cloud.google.com → APIs & Services → Credentials
+//   2. Create OAuth 2.0 Client ID → Web application
+//   3. Add https://tonightvietnam.com to Authorized JavaScript origins
+//   4. Paste the Client ID below
 const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
 
 // ── FORGOT PASSWORD ──
@@ -5396,7 +5406,7 @@ function openGateway(){
 function openProSignup(){
   openOverlay('proSignupOverlay');
 }
-function submitProSignup(e){
+async function submitProSignup(e){
   e.preventDefault();
   const btn   = document.getElementById('psSubmitBtn');
   const name  = document.getElementById('psName').value.trim();
@@ -5405,13 +5415,27 @@ function submitProSignup(e){
   const pass  = document.getElementById('psPassword').value;
   const accs  = _getAccounts();
   if(accs[email]){ toast('Account already exists — log in instead','err'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Creating account…';
+
   const acc = {name, email, password:_hashPw(pass), businessName:biz, role:'pro', joinedAt:new Date().toISOString(), source:'pro'};
   accs[email] = acc;
   _saveAccounts(accs);
+
+  // Notify via email
+  await _sendToEmail({
+    source:       'pro-signup',
+    name,
+    businessName: biz,
+    email,
+    userAgent:    navigator.userAgent,
+    submittedAt:  new Date().toISOString()
+  });
+
   curRole = 'pro';
   finishLogin(name, 'Tonight', acc);
-  // finishLogin already opens pro dashboard after 400ms — just close this overlay
-  document.getElementById('psSubmitBtn').textContent = '✓ Account created!';
+  btn.textContent = '✓ Account created!';
   setTimeout(()=>closeOverlay('proSignupOverlay'), 600);
 }
 
@@ -5437,7 +5461,8 @@ function socialSignIn(provider){
 // ── Google One Tap / GIS ─────────────────────────────────────
 function _googleSignIn(){
   if(GOOGLE_CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'){
-    toast('Google sign-in not configured yet','err'); return;
+    // Client ID not yet configured — fall back to email prompt so sign-in still works
+    _socialEmailPrompt('google'); return;
   }
   if(!window.google){
     toast('Loading Google sign-in…','ok');
@@ -5489,8 +5514,8 @@ function _appleSignIn(){
 
 // Fallback: ask for email only, then prefill the form
 function _socialEmailPrompt(provider){
-  const providerName = provider === 'apple' ? 'iCloud / Apple' : 'Outlook / Microsoft';
-  const icon = provider === 'apple' ? '🍎' : '📧';
+  const providerName = provider === 'google' ? 'Google' : provider === 'apple' ? 'iCloud / Apple' : 'Outlook / Microsoft';
+  const icon = provider === 'google' ? '🔵' : provider === 'apple' ? '🍎' : '📧';
   // Show a quick inline prompt inside the form
   const existing = document.getElementById('_socialPrompt');
   if(existing) existing.remove();
@@ -5500,7 +5525,7 @@ function _socialEmailPrompt(provider){
     <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px">
       <div style="font-size:13px;font-weight:600;color:#fff">${icon} Continue with ${providerName}</div>
       <div style="font-size:12px;color:var(--text3)">Enter your ${providerName.split('/')[0].trim()} email address:</div>
-      <input id="_socialEmail" type="email" placeholder="${provider==='apple'?'you@icloud.com / me.com':'you@outlook.com / hotmail.com'}"
+      <input id="_socialEmail" type="email" placeholder="${provider==='google'?'you@gmail.com':provider==='apple'?'you@icloud.com / me.com':'you@outlook.com / hotmail.com'}"
         style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;color:#fff;font-size:13px;font-family:inherit;outline:none;width:100%"/>
       <div style="display:flex;gap:8px">
         <button type="button" onclick="
@@ -5593,18 +5618,7 @@ async function submitCommunity(e){
     _saveAccounts(accs);
   }
 
-  // Try webhook
-  if(COMMUNITY_WEBHOOK && COMMUNITY_WEBHOOK !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL'){
-    try{
-      await fetch(COMMUNITY_WEBHOOK, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify(lead)
-      });
-    } catch(err){
-      console.warn('Webhook failed, lead saved locally:', err);
-    }
-  }
+  await _sendToEmail(lead);
 
   // Auto-login the new member
   curRole='guest';
@@ -5644,15 +5658,12 @@ async function submitCommunity(e){
 
 // Retry leads that failed to send (e.g. offline at time of submit)
 async function retryQueue(){
-  if(!COMMUNITY_WEBHOOK || COMMUNITY_WEBHOOK==='YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') return;
   try{
     const q = JSON.parse(localStorage.getItem('_cmQueue')||'[]');
     if(!q.length) return;
     const remaining = [];
     for(const lead of q){
-      try{
-        await fetch(COMMUNITY_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(lead)});
-      } catch(_){ remaining.push(lead); }
+      try{ await _sendToEmail(lead); } catch(_){ remaining.push(lead); }
     }
     localStorage.setItem('_cmQueue', JSON.stringify(remaining));
   } catch(_){}

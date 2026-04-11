@@ -17,7 +17,7 @@
 
 const SHEET_ID   = 'YOUR_GOOGLE_SHEET_ID_HERE'; // ← replace this
 const TAB_NAME   = 'Tonight Community';           // sheet tab name (auto-created)
-const ALERT_EMAIL = 'your@email.com';             // ← your email for new sign-up alerts
+const ALERT_EMAIL = 'tonightapp1@gmail.com';       // ← your email for new sign-up alerts
 
 // Column headers (in order)
 const HEADERS = [
@@ -42,6 +42,9 @@ function doPost(e) {
     if (data.source === 'pro-event-submission') {
       saveProEvent(data);
       if (ALERT_EMAIL) sendProAlert(data);
+    } else if (data.source === 'pro-signup') {
+      saveProSignup(data);
+      if (ALERT_EMAIL) sendProSignupAlert(data);
     } else {
       saveToSheet(data);
       if (ALERT_EMAIL) sendAlert(data);
@@ -193,6 +196,37 @@ Submitted: ${new Date().toLocaleString()}
 → Review in Google Sheets and update Status to "Listed" or "Rejected".
   `.trim();
 
+  MailApp.sendEmail(ALERT_EMAIL, subject, body);
+}
+
+// ── Save pro account sign-up ──────────────────────────────────
+const PRO_SIGNUP_TAB     = 'Pro Account Sign-Ups';
+const PRO_SIGNUP_HEADERS = ['Timestamp', 'Name', 'Business Name', 'Email', 'Source', 'User Agent'];
+
+function saveProSignup(data) {
+  const ss  = SpreadsheetApp.openById(SHEET_ID);
+  let   tab = ss.getSheetByName(PRO_SIGNUP_TAB);
+  if (!tab) {
+    tab = ss.insertSheet(PRO_SIGNUP_TAB);
+    tab.appendRow(PRO_SIGNUP_HEADERS);
+    tab.getRange(1, 1, 1, PRO_SIGNUP_HEADERS.length)
+       .setFontWeight('bold').setBackground('#0a1828').setFontColor('#f5c842');
+    tab.setFrozenRows(1);
+  }
+  tab.appendRow([new Date(), data.name || '', data.businessName || '', data.email || '', data.source || 'pro-signup', data.userAgent || '']);
+  tab.autoResizeColumns(1, PRO_SIGNUP_HEADERS.length);
+}
+
+function sendProSignupAlert(data) {
+  const subject = `🏢 New Business Sign-Up: ${data.name || '?'} — ${data.businessName || '?'}`;
+  const body = `
+New business account created on Tonight.
+
+Name:          ${data.name         || '—'}
+Business:      ${data.businessName || '—'}
+Email:         ${data.email        || '—'}
+Signed up at:  ${new Date().toLocaleString()}
+  `.trim();
   MailApp.sendEmail(ALERT_EMAIL, subject, body);
 }
 
