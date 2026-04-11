@@ -17,7 +17,7 @@
 
 const SHEET_ID   = 'YOUR_GOOGLE_SHEET_ID_HERE'; // ← replace this
 const TAB_NAME   = 'Tonight Community';           // sheet tab name (auto-created)
-const ALERT_EMAIL = 'tonightapp1@gmail.com';       // ← your email for new sign-up alerts
+const ALERT_EMAIL = 'app.tonight1@gmail.com';       // ← your email for new sign-up alerts
 
 // Column headers (in order)
 const HEADERS = [
