@@ -694,10 +694,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
 .nav-signin-btn:active{transform:scale(0.96);}
 /* Desktop: use Log In / Sign Up pair; hide the single sign-in button */
 @media(min-width:641px){#navSignInBtn{display:none!important;}}
-/* Mobile: hamburger menu handles auth; hide the button pair from navbar */
+/* Mobile: auth handled inline in header */
 @media(max-width:640px){
-  .nav-signin-btn{padding:7px 14px;font-size:12px;}
-  .nav-auth{display:none!important;}
+  .nav-auth{display:flex!important;align-items:center;}
 }
 .notif-bell:hover{background:var(--card2);border-color:var(--border2);}
 .notif-bell svg{width:16px;height:16px;stroke:var(--text2);}
@@ -1256,32 +1255,48 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
     text-transform:uppercase;
   }
   .nav-logo-sub{display:none;}
-  /* Nav right: icon buttons */
-  .nav-actions{display:flex;align-items:center;gap:0;margin-left:auto;}
-  .nav-auth .btn{
-    background:transparent;border:none;color:#fff;
-    padding:8px;font-size:0;
-    min-width:44px;min-height:44px;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .nav-auth .btn::before{
-    content:'';
-    display:block;width:22px;height:22px;
-    background-image:url("data:image/svg+xml,%3Csvg fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E");
-    background-size:contain;background-repeat:no-repeat;
-  }
-  .nav-auth .btn span,.nav-auth .btn-white{font-size:0;}
-  /* Show sign-in button as icon */
+  /* Nav right: auth + icons */
+  .nav-actions{display:flex;align-items:center;gap:6px;margin-left:auto;}
+
+  /* ── Signed-out: gold pill "Join" button ── */
   .nav-signin-btn{
-    background:transparent;border:none;color:#fff;
-    min-width:44px;min-height:44px;
-    padding:8px;font-size:0;
-    display:flex;align-items:center;justify-content:center;
+    display:flex;align-items:center;gap:5px;
+    background:rgba(245,200,66,0.1);
+    border:1px solid rgba(245,200,66,0.45);
+    color:#f5c842;
+    height:32px;
+    padding:0 13px 0 9px;
+    border-radius:50px;
+    font-size:12px;font-weight:700;letter-spacing:.2px;
+    white-space:nowrap;flex-shrink:0;
   }
   .nav-signin-btn::before{
-    content:'';display:block;width:22px;height:22px;
-    background-image:url("data:image/svg+xml,%3Csvg fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E");
+    content:'';flex-shrink:0;display:block;width:13px;height:13px;
+    background-image:url("data:image/svg+xml,%3Csvg fill='none' stroke='%23f5c842' stroke-width='2' stroke-linecap='round' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E");
     background-size:contain;background-repeat:no-repeat;
+  }
+  .nav-signin-btn:active{transform:scale(0.95);background:rgba(245,200,66,0.18);}
+
+  /* ── Signed-in: compact avatar pill ── */
+  .nav-auth .btn,.nav-auth .btn-white{display:none;}
+  .nav-auth .nav-user{
+    display:flex;align-items:center;gap:7px;
+    background:rgba(245,200,66,0.1);
+    border:1px solid rgba(245,200,66,0.35);
+    border-radius:50px;
+    padding:3px 12px 3px 3px;
+    cursor:pointer;
+  }
+  .nav-auth .nav-av{
+    width:26px;height:26px;border-radius:50%;
+    background:#f5c842;
+    color:#000;font-size:10px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .nav-auth .nav-uname{
+    font-size:12px;font-weight:700;color:#f5c842;
+    max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   }
   /* Location icon button */
   .nav-loc{
