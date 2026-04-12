@@ -2213,7 +2213,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
         <div class="deal-code-box">
           <div class="deal-code-label">Your Personal QR — Show at the door</div>
           <div id="dealClaimNameDisplay" style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;letter-spacing:.3px"></div>
-          <div id="dealQrWrap" style="display:flex;justify-content:center;margin:10px 0 6px"></div>
+          <div id="dealQrWrap" style="display:flex;justify-content:center;margin:10px 0 6px">
+            <img id="dealQrImg" src="" alt="Deal QR Code" width="190" height="190" style="border-radius:12px;display:none;background:#fff;padding:10px;box-sizing:border-box"/>
+          </div>
           <div class="deal-code" id="dealCode" style="font-size:12px;letter-spacing:1.5px;margin-bottom:2px">—</div>
           <div class="deal-code-sub">Screenshot to save · One use only</div>
         </div>
@@ -6096,6 +6098,7 @@ function openDeal(p){
   if(ni) ni.value='';
   if(ei) ei.value='';
   if(pi) pi.value='';
+  const qi=document.getElementById('dealQrImg'); if(qi){qi.src='';qi.style.display='none';}
   // Pre-fill from saved profile
   try{ const u=JSON.parse(localStorage.getItem('tn_user_profile')||'{}'); if(u.name&&ni) ni.value=u.name; if(u.email&&ei) ei.value=u.email; }catch(e){}
   openOverlay('dealOverlay');
@@ -6124,22 +6127,12 @@ function claimDeal(){
   const nd=document.getElementById('dealClaimNameDisplay'), cd=document.getElementById('dealCode');
   if(nd) nd.textContent=name+(email?' · '+email:'')+(phone?' · '+phone:'');
   if(cd) cd.textContent=code;
-  // Render QR
-  window._loadQR().then(()=>{
-    const wrap=document.getElementById('dealQrWrap');
-    if(!wrap) return;
-    wrap.innerHTML='';
-    const canvas=document.createElement('canvas');
-    wrap.appendChild(canvas);
-    if(typeof QRCode!=='undefined'){
-      QRCode.toCanvas(canvas,qrData,{width:180,margin:1,color:{dark:'#000',light:'#fff'}},()=>{canvas.style.borderRadius='10px';});
-    } else {
-      const img=document.createElement('img');
-      img.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(qrData);
-      img.style.cssText='border-radius:10px;display:block';
-      wrap.appendChild(img);
-    }
-  });
+  // Render QR — direct image, no library needed
+  const qrImg=document.getElementById('dealQrImg');
+  if(qrImg){
+    qrImg.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&color=000000&bgcolor=ffffff&margin=1&data='+encodeURIComponent(qrData);
+    qrImg.style.display='block';
+  }
   if(email){
     toast('QR sent to '+email+' — check your inbox','ok');
   } else {
