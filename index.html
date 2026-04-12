@@ -2196,9 +2196,11 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
         <div style="font-size:11px;color:var(--text3);margin-bottom:14px;letter-spacing:.4px">Valid <span id="dealWindow">tonight</span> · Free to claim</div>
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
           <input class="fi" id="dealClaimName" placeholder="Your name *" autocomplete="name" style="font-size:14px"/>
+          <input class="fi" id="dealClaimEmail" placeholder="Email — get QR sent to your inbox ✉️" type="email" autocomplete="email" style="font-size:14px"/>
           <input class="fi" id="dealClaimPhone" placeholder="Phone / WhatsApp (optional)" type="tel" autocomplete="tel" style="font-size:14px"/>
         </div>
-        <button class="fsub" onclick="claimDeal()" style="margin:0 0 16px;width:100%;font-size:15px">Get My QR Code →</button>
+        <button class="fsub" onclick="claimDeal()" style="margin:0 0 8px;width:100%;font-size:15px">Get My QR Code →</button>
+        <p style="font-size:11px;color:var(--text3);text-align:center;margin:0 0 14px;line-height:1.5">Add your email to receive the QR in your inbox so you never lose it</p>
         <div class="deal-steps">
           <div class="deal-step"><span class="deal-step-n">1</span><span>Enter your name and tap Get QR</span></div>
           <div class="deal-step"><span class="deal-step-n">2</span><span>Go to the venue during the valid window</span></div>
@@ -6090,20 +6092,24 @@ function openDeal(p){
   const cf=document.getElementById('dealClaimForm'), qs=document.getElementById('dealQrSection');
   if(cf) cf.style.display='';
   if(qs) qs.style.display='none';
-  const ni=document.getElementById('dealClaimName'), pi=document.getElementById('dealClaimPhone');
+  const ni=document.getElementById('dealClaimName'), ei=document.getElementById('dealClaimEmail'), pi=document.getElementById('dealClaimPhone');
   if(ni) ni.value='';
+  if(ei) ei.value='';
   if(pi) pi.value='';
-  // Pre-fill name from saved profile
-  try{ const u=JSON.parse(localStorage.getItem('tn_user_profile')||'{}'); if(u.name&&ni) ni.value=u.name; }catch(e){}
+  // Pre-fill from saved profile
+  try{ const u=JSON.parse(localStorage.getItem('tn_user_profile')||'{}'); if(u.name&&ni) ni.value=u.name; if(u.email&&ei) ei.value=u.email; }catch(e){}
   openOverlay('dealOverlay');
 }
 
 function claimDeal(){
   const p = _activeDeal;
   if(!p) return;
-  const ni=document.getElementById('dealClaimName'), pi=document.getElementById('dealClaimPhone');
+  const ni=document.getElementById('dealClaimName');
+  const ei=document.getElementById('dealClaimEmail');
+  const pi=document.getElementById('dealClaimPhone');
   const name=(ni?.value||'').trim();
   if(!name){ if(ni)ni.focus(); toast('Please enter your name','err'); return; }
+  const email=(ei?.value||'').trim();
   const phone=(pi?.value||'').trim();
   // Build personalised QR data: TONIGHT-DEAL:VENUE-SLUG|CODE|Name|Phone
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -6116,7 +6122,7 @@ function claimDeal(){
   if(cf) cf.style.display='none';
   if(qs) qs.style.display='';
   const nd=document.getElementById('dealClaimNameDisplay'), cd=document.getElementById('dealCode');
-  if(nd) nd.textContent=name+(phone?' · '+phone:'');
+  if(nd) nd.textContent=name+(email?' · '+email:'')+(phone?' · '+phone:'');
   if(cd) cd.textContent=code;
   // Render QR
   window._loadQR().then(()=>{
@@ -6134,14 +6140,28 @@ function claimDeal(){
       wrap.appendChild(img);
     }
   });
-  toast('QR code ready — screenshot to save','ok');
-  // Log to Sheets
+  if(email){
+    toast('QR sent to '+email+' — check your inbox','ok');
+  } else {
+    toast('QR ready — screenshot to save','ok');
+  }
+  // Send email + log to Sheets via Apps Script
   if(COMMUNITY_WEBHOOK&&COMMUNITY_WEBHOOK!=='YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL'){
     const _dt=getDeviceType();
     fetch(COMMUNITY_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({source:'deal-claim',code,dealTitle:p.title||'',venueName:p.venueName||'',city:p.city||'',discount:p.discount||'',guestName:name,guestPhone:phone,deviceType:_dt.device})
+      body:JSON.stringify({
+        source:'deal-claim',
+        code, qrData,
+        dealTitle:p.title||'', venueName:p.venueName||'', city:p.city||'',
+        discount:p.discount||'', startTime:p.startTime||'', endTime:p.endTime||'',
+        desc:p.desc||'',
+        guestName:name, guestEmail:email, guestPhone:phone,
+        deviceType:_dt.device
+      })
     }).catch(()=>{});
   }
+  // Save contact to profile if email given
+  if(email){ try{ const u=JSON.parse(localStorage.getItem('tn_user_profile')||'{}'); if(!u.email) u.email=email; if(!u.name) u.name=name; localStorage.setItem('tn_user_profile',JSON.stringify(u)); }catch(e){} }
 }
 
 function openDealDirections(){

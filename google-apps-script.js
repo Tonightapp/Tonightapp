@@ -39,6 +39,7 @@ function doPost(e) {
         break;
       case 'deal-claim':
         saveDealClaim(data);
+        if (data.guestEmail) sendDealConfirmation(data);
         break;
       default:
         saveToSheet(data);
@@ -260,8 +261,109 @@ function saveDealClaim(data) {
     data.discount   || '',
     data.guestName  || '',
     data.guestEmail || '',
+    data.guestPhone || '',
     data.deviceType || ''
   ]);
+}
+
+function sendDealConfirmation(data) {
+  const name      = data.guestName  || 'Guest';
+  const firstName = name.split(' ')[0];
+  const email     = data.guestEmail;
+  const venue     = data.venueName  || '';
+  const city      = data.city       || '';
+  const deal      = data.dealTitle  || 'Special Offer';
+  const discount  = data.discount   || 'DEAL';
+  const window_   = data.startTime && data.endTime ? data.startTime + '–' + data.endTime : 'tonight';
+  const code      = data.code       || '';
+  const qrData    = data.qrData     || ('TONIGHT-DEAL:' + code);
+  const desc      = data.desc       || '';
+
+  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=000000&bgcolor=ffffff&data=' + encodeURIComponent(qrData);
+  const subject = '🎟 Your Tonight Deal — ' + deal + ' at ' + venue;
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
+<body style="margin:0;padding:0;background:#0a0b14;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0b14;padding:32px 0">
+    <tr><td align="center">
+      <table width="520" cellpadding="0" cellspacing="0" style="background:#0f1020;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);max-width:520px;width:100%">
+
+        <!-- Header -->
+        <tr><td style="background:linear-gradient(135deg,#0a1828,#0d2040);padding:28px 32px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:28px;font-weight:900;letter-spacing:4px;color:#f5c842;font-family:Georgia,serif">TONIGHT</div>
+          <div style="font-size:11px;letter-spacing:3px;color:rgba(255,255,255,0.4);margin-top:4px;text-transform:uppercase">Vietnam · Southeast Asia</div>
+        </td></tr>
+
+        <!-- Greeting -->
+        <tr><td style="padding:28px 32px 0">
+          <div style="font-size:20px;font-weight:700;color:#ffffff;margin-bottom:6px">Your deal is confirmed, ${firstName}! 🎉</div>
+          <div style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.6">Show the QR code at the venue — staff will scan it to unlock your offer instantly.</div>
+        </td></tr>
+
+        <!-- Deal info -->
+        <tr><td style="padding:20px 32px">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(245,200,66,0.07);border:1px solid rgba(245,200,66,0.2);border-radius:10px;padding:16px">
+            <tr><td style="padding-bottom:10px">
+              <span style="display:inline-block;background:#f5c842;color:#000;font-size:12px;font-weight:900;letter-spacing:1.5px;padding:4px 12px;border-radius:20px">${discount}</span>
+            </td></tr>
+            <tr><td style="font-size:16px;font-weight:700;color:#ffffff;padding-bottom:10px">${deal}</td></tr>
+            <tr><td>
+              <table cellpadding="0" cellspacing="0">
+                ${venue ? `<tr><td style="font-size:12px;color:rgba(255,255,255,0.45);padding-right:8px;padding-bottom:5px">📍</td><td style="font-size:13px;color:rgba(255,255,255,0.8);padding-bottom:5px">${venue}${city ? ', ' + city : ''}</td></tr>` : ''}
+                <tr><td style="font-size:12px;color:rgba(255,255,255,0.45);padding-right:8px;padding-bottom:5px">🕐</td><td style="font-size:13px;color:rgba(255,255,255,0.8);padding-bottom:5px">Valid ${window_}</td></tr>
+                ${desc ? `<tr><td colspan="2" style="font-size:12px;color:rgba(255,255,255,0.5);padding-top:4px;line-height:1.5">${desc}</td></tr>` : ''}
+              </table>
+            </td></tr>
+          </table>
+        </td></tr>
+
+        <!-- QR Code -->
+        <tr><td style="padding:0 32px 24px;text-align:center">
+          <div style="background:#ffffff;border-radius:12px;padding:20px;display:inline-block;margin:0 auto">
+            <img src="${qrUrl}" width="220" height="220" alt="Your Deal QR Code" style="display:block;border-radius:4px"/>
+            <div style="margin-top:10px;font-size:10px;font-weight:700;letter-spacing:1.5px;color:#666;font-family:monospace">${code}</div>
+          </div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:12px">Show this QR at the venue · Staff scans to confirm your deal</div>
+        </td></tr>
+
+        <!-- Steps -->
+        <tr><td style="padding:0 32px 28px">
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:12px">How to use</div>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td width="28" valign="top" style="padding-bottom:10px"><div style="width:22px;height:22px;border-radius:50%;background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.3);text-align:center;line-height:22px;font-size:11px;font-weight:700;color:#f5c842">1</div></td>
+              <td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px;padding-bottom:10px">Save this email or screenshot the QR code</td>
+            </tr>
+            <tr>
+              <td width="28" valign="top" style="padding-bottom:10px"><div style="width:22px;height:22px;border-radius:50%;background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.3);text-align:center;line-height:22px;font-size:11px;font-weight:700;color:#f5c842">2</div></td>
+              <td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px;padding-bottom:10px">Arrive at ${venue || 'the venue'} during the valid window</td>
+            </tr>
+            <tr>
+              <td width="28" valign="top"><div style="width:22px;height:22px;border-radius:50%;background:rgba(0,208,132,0.15);border:1px solid rgba(0,208,132,0.3);text-align:center;line-height:22px;font-size:11px;font-weight:700;color:#00d084">3</div></td>
+              <td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px">Show QR to staff — they scan and your deal is unlocked ✓</td>
+            </tr>
+          </table>
+        </td></tr>
+
+        <!-- Footer -->
+        <tr><td style="background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.06);padding:18px 32px;text-align:center">
+          <div style="font-size:11px;color:rgba(255,255,255,0.25);line-height:1.7">
+            This deal is subject to venue availability and confirmation.<br>
+            Tonight does not charge for deals or offers.<br>
+            <a href="${APP_URL}" style="color:rgba(255,255,255,0.35)">${APP_URL}</a>
+          </div>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  MailApp.sendEmail({ to: email, subject, htmlBody: html, name: APP_NAME });
 }
 
 // ═══════════════════════════════════════════════════════════════
