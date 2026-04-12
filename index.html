@@ -339,7 +339,7 @@ img{max-width:100%;height:auto;-webkit-user-drag:none;user-select:none;-webkit-u
 
 /* qty control — used for guestlist people count */
 .qty-ctrl{display:flex;align-items:center;gap:10px;}
-.qbtn{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid var(--border);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;}
+.qbtn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid var(--border);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;}
 .qbtn:hover{background:rgba(255,255,255,.15);}
 
 /* PRO DASHBOARD */
@@ -561,6 +561,27 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
   body{padding-bottom:calc(60px + env(safe-area-inset-bottom));}
   .toasts{bottom:calc(76px + env(safe-area-inset-bottom));right:12px;}
   #imHereBar{bottom:calc(76px + env(safe-area-inset-bottom))!important;}
+
+  /* ── PRO DASHBOARD — collapse sidebar to horizontal tab strip ── */
+  .pro-dash{flex-direction:column;}
+  .dsidebar{width:100%;height:auto;flex-direction:row;border-right:none;border-bottom:1px solid var(--border);padding:8px 12px;gap:4px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;}
+  .dsidebar::-webkit-scrollbar{display:none;}
+  .dlogo,.drole{display:none;}
+  .dnav{flex-direction:row;gap:0;padding:0;flex:0 0 auto;}
+  .ditem{min-width:70px;flex-shrink:0;padding:8px 10px;font-size:11px;flex-direction:column;gap:3px;text-align:center;border-radius:8px;}
+  .ditem .di{font-size:18px;width:auto;}
+  .dsout{padding:8px 10px;border-radius:8px;font-size:11px;flex-direction:column;gap:3px;}
+  .dmain{padding:16px;overflow-y:auto;}
+  .dstats{grid-template-columns:1fr 1fr;}
+  .fgrid{grid-template-columns:1fr;}
+  .fgrid .full{grid-column:1;}
+
+  /* ── MODAL SAFE AREA ── */
+  .modal{padding-bottom:calc(16px + env(safe-area-inset-bottom))!important;}
+
+  /* ── USER DASHBOARD ── */
+  .user-dash{border-radius:20px 20px 0 0;top:auto;height:92dvh;height:92vh;}
+  .udinner{padding:16px 16px calc(20px + env(safe-area-inset-bottom));}
 
   /* ── HERO ── */
   .hero-banner{height:340px;border-radius:0;}
@@ -931,6 +952,97 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
 .scan-result-title{font-size:15px;font-weight:600;margin-bottom:4px;color:var(--text);}
 .scan-result-sub{font-size:12px;color:var(--text2);font-weight:300;line-height:1.6;}
 
+/* ── PRO DASHBOARD ENHANCEMENTS ── */
+/* Rich scan client card */
+.scan-client-card{width:100%;border-radius:14px;overflow:hidden;border:1px solid rgba(0,208,132,.35);background:rgba(0,208,132,.06);}
+.scan-client-top{display:flex;align-items:center;gap:14px;padding:16px;}
+.scan-client-av{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#00d084,#0097ff);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#000;flex-shrink:0;letter-spacing:-1px;}
+.scan-client-info{flex:1;}
+.scan-client-name{font-size:17px;font-weight:700;color:#fff;margin-bottom:2px;}
+.scan-client-email{font-size:12px;color:var(--text3);margin-bottom:3px;}
+.scan-client-phone{font-size:12px;color:var(--green);font-weight:600;}
+.scan-client-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;}
+.scan-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;}
+.scan-badge-new{background:rgba(245,200,66,.15);border:1px solid rgba(245,200,66,.3);color:#f5c842;}
+.scan-badge-vip{background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.3);color:#c084fc;}
+.scan-badge-ok{background:rgba(0,208,132,.15);border:1px solid rgba(0,208,132,.3);color:#00d084;}
+.scan-ticket-strip{background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.07);padding:12px 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.scan-tfield{display:flex;flex-direction:column;gap:2px;}
+.scan-tfield-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);}
+.scan-tfield-val{font-size:13px;font-weight:600;color:var(--text);}
+.scan-checkin-btn{width:100%;padding:13px;background:var(--green);color:#000;font-weight:800;font-size:14px;border:none;cursor:pointer;font-family:inherit;letter-spacing:.2px;transition:.15s;}
+.scan-checkin-btn:hover{background:#00b873;}
+.scan-log{margin-top:14px;}
+.scan-log-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:8px;}
+.scan-log-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.scan-log-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.scan-log-dot.ok{background:var(--green);}
+.scan-log-dot.err{background:var(--red);}
+.scan-log-name{font-size:12px;font-weight:600;flex:1;}
+.scan-log-time{font-size:10px;color:var(--text3);}
+
+/* Guests CRM */
+.crm-search-bar{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:9px 14px;margin-bottom:14px;}
+.crm-search-bar input{background:transparent;color:#fff;font-size:13px;width:100%;border:none;outline:none;}
+.crm-table{width:100%;border-collapse:collapse;}
+.crm-table th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);}
+.crm-table td{font-size:12px;padding:10px 10px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle;}
+.crm-table tr:hover td{background:rgba(255,255,255,.03);}
+.crm-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#00d084,#0080ff);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#000;flex-shrink:0;}
+.crm-status{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
+.crm-status.valid{background:rgba(0,208,132,.15);color:var(--green);}
+.crm-status.used{background:rgba(255,255,255,.08);color:var(--text3);}
+.crm-filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.crm-fchip{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:500;background:transparent;border:1px solid var(--border);color:var(--text3);cursor:pointer;transition:.15s;font-family:inherit;}
+.crm-fchip:hover,.crm-fchip.active{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:#fff;}
+.crm-empty{text-align:center;padding:48px 20px;color:var(--text3);}
+
+/* Analytics */
+.an-kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.an-kpi{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.an-kpi-val{font-size:28px;font-weight:700;color:#fff;line-height:1;margin-bottom:4px;}
+.an-kpi-label{font-size:11px;color:var(--text3);}
+.an-kpi-delta{font-size:11px;font-weight:600;margin-top:4px;}
+.an-kpi-delta.up{color:var(--green);}
+.an-kpi-delta.dn{color:var(--red);}
+.an-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.an-bar-label{font-size:11px;color:var(--text2);width:36px;text-align:right;flex-shrink:0;}
+.an-bar-track{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;}
+.an-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#00d084,#00a0ff);transition:width .6s ease;}
+.an-bar-val{font-size:11px;color:var(--text3);width:28px;flex-shrink:0;}
+.an-evt-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.an-evt-ico{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.an-evt-info{flex:1;}
+.an-evt-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:2px;}
+.an-evt-meta{font-size:11px;color:var(--text3);}
+.an-evt-conv{text-align:right;}
+.an-evt-conv-val{font-size:15px;font-weight:700;color:var(--green);}
+.an-evt-conv-label{font-size:10px;color:var(--text3);}
+
+/* Overview enhancements */
+.dstat-delta{font-size:10px;margin-top:2px;font-weight:600;}
+.dstat-delta.up{color:var(--green);}
+.dstat-delta.dn{color:var(--red);}
+.overview-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
+.ov-action{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;color:var(--text);}
+.ov-action:hover{border-color:rgba(255,255,255,.18);background:var(--bg3);}
+.ov-action .oa-ico{font-size:20px;width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.activity-feed{display:flex;flex-direction:column;gap:0;}
+.af-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.af-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.af-dot.join{background:var(--green);}
+.af-dot.view{background:rgba(255,255,255,.25);}
+.af-dot.scan{background:#f5c842;}
+.af-body{flex:1;font-size:12px;color:var(--text2);}
+.af-body strong{color:#fff;font-weight:600;}
+.af-time{font-size:10px;color:var(--text3);white-space:nowrap;}
+
+@media(max-width:640px){
+  .an-kpi-grid{grid-template-columns:1fr 1fr;}
+  .overview-actions{grid-template-columns:1fr;}
+  .crm-table th:nth-child(3),.crm-table td:nth-child(3),.crm-table th:nth-child(5),.crm-table td:nth-child(5){display:none;}
+}
+
 /* ── BUGECE-STYLE ARTIST CIRCLES ── */
 .artist-row-centered{display:flex;justify-content:center;gap:0;padding-bottom:4px;}
 .artist-bubble{flex-shrink:0;width:calc(100% / 5);max-width:200px;min-width:120px;display:flex;flex-direction:column;align-items:center;gap:14px;cursor:default;padding:0 8px;}
@@ -1160,6 +1272,27 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
 .le-submit:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,208,132,.3);}
 .le-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;}
 @media(max-width:640px){.le-row{grid-template-columns:1fr;}.le-form{padding:16px 16px calc(20px + env(safe-area-inset-bottom));max-height:62vh;}.le-header{padding:20px 16px 14px;}.le-title{font-size:18px;}}
+
+/* ── LISTING WIZARD ── */
+.le-step-bar{display:flex;align-items:center;gap:0;padding:14px 28px 0;background:linear-gradient(160deg,#0a1018,#0d1828);}
+.le-step-item{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:600;color:var(--text3);white-space:nowrap;}
+.le-step-item .ls-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;transition:.2s;}
+.le-step-item.active{color:#fff;}
+.le-step-item.active .ls-num{background:var(--green);border-color:var(--green);color:#000;}
+.le-step-item.done{color:var(--green);}
+.le-step-item.done .ls-num{background:rgba(0,208,132,.2);border-color:var(--green);color:var(--green);}
+.le-step-div{flex:1;height:1px;background:var(--border);margin:0 8px;}
+.wizard-step{display:none;}
+.wizard-step.active{display:flex;flex-direction:column;gap:12px;}
+.le-nav-row{display:flex;gap:10px;margin-top:4px;}
+.le-btn-back{flex:1;padding:11px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:.15s;}
+.le-btn-back:hover{border-color:var(--border2);color:#fff;}
+.le-btn-next{flex:2;padding:11px;border-radius:8px;border:none;background:#fff;color:#000;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s;}
+.le-btn-next:hover{background:#e8e8e8;}
+.le-review-box{background:rgba(0,208,132,.05);border:1px solid rgba(0,208,132,.15);border-radius:10px;padding:14px;font-size:12px;color:var(--text2);line-height:1.8;}
+.le-review-box strong{color:#fff;}
+.le-img-preview{max-width:100%;border-radius:8px;display:none;margin-top:8px;}
+@media(max-width:640px){.le-step-bar{padding:12px 16px 0;}.le-nav-row{flex-direction:column-reverse;}.le-btn-back{flex:none;}.le-btn-next{flex:none;}}
 
 /* ── DEAL CLAIM MODAL ── */
 .deal-modal-header{padding:28px 24px 20px;background:linear-gradient(160deg,#0d1220,#111827);border-bottom:1px solid rgba(255,255,255,.07);position:relative;}
@@ -1880,137 +2013,168 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
       <button class="mclose" onclick="closeOverlay('listEventOverlay')" style="position:absolute;top:14px;right:14px;z-index:2">✕</button>
       <div class="le-badge">Free · No Account Needed</div>
       <h2 class="le-title">List Your Event on Tonight</h2>
-      <p class="le-sub">Fill in your event details. We review and list it within 24 hours.</p>
+      <p class="le-sub">3 quick steps — we review &amp; list within 24 hours.</p>
+    </div>
+    <!-- Step progress bar -->
+    <div class="le-step-bar" id="leStepBar">
+      <div class="le-step-item active" id="leStepLbl1"><span class="ls-num">1</span>Business</div>
+      <div class="le-step-div"></div>
+      <div class="le-step-item" id="leStepLbl2"><span class="ls-num">2</span>Event</div>
+      <div class="le-step-div"></div>
+      <div class="le-step-item" id="leStepLbl3"><span class="ls-num">3</span>Review</div>
     </div>
     <form class="le-form" id="listEventForm" onsubmit="submitListEvent(event)">
 
-      <div class="le-section-label">Your Business</div>
-      <div class="le-row">
-        <div class="le-field">
-          <label>Business / Venue Name <span class="cm-req">*</span></label>
-          <input type="text" id="le_biz" placeholder="e.g. Broma Not a Bar, The Vault" required/>
+      <!-- ── STEP 1: Business ── -->
+      <div class="wizard-step active" id="leWizard1">
+        <div class="le-row">
+          <div class="le-field">
+            <label>Business / Venue Name <span class="cm-req">*</span></label>
+            <input type="text" id="le_biz" placeholder="e.g. Broma Not a Bar, The Vault"/>
+          </div>
+          <div class="le-field">
+            <label>Type <span class="cm-req">*</span></label>
+            <select id="le_type">
+              <option value="" disabled selected>Select type</option>
+              <option>Night Club</option>
+              <option>Bar</option>
+              <option>Restaurant &amp; Bar</option>
+              <option>Rooftop Bar</option>
+              <option>Beach Club</option>
+              <option>Concert Venue</option>
+              <option>Festival / Outdoor</option>
+              <option>Event Promoter</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="le-row">
+          <div class="le-field">
+            <label>City <span class="cm-req">*</span></label>
+            <select id="le_city">
+              <option value="" disabled selected>Select city</option>
+              <option>Ho Chi Minh City</option>
+              <option>Hanoi</option>
+              <option>Da Nang</option>
+              <option>Hoi An</option>
+              <option>Nha Trang</option>
+              <option>Phu Quoc</option>
+            </select>
+          </div>
+          <div class="le-field">
+            <label>Venue Address</label>
+            <input type="text" id="le_address" placeholder="Street address or district"/>
+          </div>
+        </div>
+        <div class="le-row">
+          <div class="le-field">
+            <label>Your Name <span class="cm-req">*</span></label>
+            <input type="text" id="le_contact" placeholder="First and last name"/>
+          </div>
+          <div class="le-field">
+            <label>Phone (WhatsApp) <span class="cm-req">*</span></label>
+            <input type="tel" id="le_phone" placeholder="+84 9XX XXX XXX"/>
+          </div>
         </div>
         <div class="le-field">
-          <label>Type <span class="cm-req">*</span></label>
-          <select id="le_type" required>
-            <option value="" disabled selected>Select type</option>
-            <option>Night Club</option>
-            <option>Bar</option>
-            <option>Restaurant & Bar</option>
-            <option>Rooftop Bar</option>
-            <option>Beach Club</option>
-            <option>Concert Venue</option>
-            <option>Festival / Outdoor</option>
-            <option>Event Promoter</option>
-            <option>Other</option>
-          </select>
+          <label>Email <span class="cm-req">*</span></label>
+          <input type="email" id="le_email" placeholder="hello@yourvenue.com"/>
         </div>
-      </div>
-      <div class="le-row">
-        <div class="le-field">
-          <label>City <span class="cm-req">*</span></label>
-          <select id="le_city" required>
-            <option value="" disabled selected>Select city</option>
-            <option>Ho Chi Minh City</option>
-            <option>Hanoi</option>
-            <option>Da Nang</option>
-          </select>
+        <div class="le-row">
+          <div class="le-field">
+            <label>Instagram <span class="cm-req-soft">(optional)</span></label>
+            <input type="text" id="le_ig" placeholder="@yourvenue"/>
+          </div>
+          <div class="le-field">
+            <label>Website <span class="cm-req-soft">(optional)</span></label>
+            <input type="text" id="le_web" placeholder="https://..."/>
+          </div>
         </div>
-        <div class="le-field">
-          <label>Venue Address</label>
-          <input type="text" id="le_address" placeholder="Street address or district"/>
-        </div>
-      </div>
-
-      <div class="le-section-label" style="margin-top:4px">Event Details</div>
-      <div class="le-field le-full">
-        <label>Event Name <span class="cm-req">*</span></label>
-        <input type="text" id="le_title" placeholder="e.g. Friday Deep House Night, Ladies Night with DJ Kim" required/>
-      </div>
-      <div class="le-row">
-        <div class="le-field">
-          <label>Date <span class="cm-req">*</span></label>
-          <input type="date" id="le_date" required/>
-        </div>
-        <div class="le-field">
-          <label>Doors Open <span class="cm-req">*</span></label>
-          <input type="time" id="le_time" value="20:00" required/>
-        </div>
-      </div>
-      <div class="le-row">
-        <div class="le-field">
-          <label>Music Genre</label>
-          <select id="le_genre">
-            <option value="">Any / Mixed</option>
-            <option>Techno</option>
-            <option>House</option>
-            <option>EDM</option>
-            <option>Hip-Hop</option>
-            <option>R&B</option>
-            <option>Pop</option>
-            <option>Rock</option>
-            <option>Jazz</option>
-            <option>Live Band</option>
-            <option>Acoustic</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="le-field">
-          <label>Expected Capacity</label>
-          <select id="le_capacity">
-            <option value="">Not specified</option>
-            <option>Under 50</option>
-            <option>50–150</option>
-            <option>150–500</option>
-            <option>500–2,000</option>
-            <option>2,000+</option>
-          </select>
-        </div>
-      </div>
-      <div class="le-field le-full">
-        <label>Event Description <span class="cm-req">*</span></label>
-        <textarea id="le_desc" placeholder="Describe the night — who's playing, what to expect, dress code, age limit…" rows="3" required></textarea>
-      </div>
-      <div class="le-field le-full">
-        <label>Special Offer <span class="cm-req-soft">(optional — e.g. Free entry before 11pm, Ladies night, 2-for-1 drinks)</span></label>
-        <input type="text" id="le_offer" placeholder="e.g. Free entry on guestlist before midnight"/>
-      </div>
-
-      <div class="le-section-label" style="margin-top:4px">Your Contact</div>
-      <div class="le-row">
-        <div class="le-field">
-          <label>Your Name <span class="cm-req">*</span></label>
-          <input type="text" id="le_contact" placeholder="First and last name" required/>
-        </div>
-        <div class="le-field">
-          <label>Phone (WhatsApp) <span class="cm-req">*</span></label>
-          <input type="tel" id="le_phone" placeholder="+84 9XX XXX XXX" required/>
-        </div>
-      </div>
-      <div class="le-field le-full">
-        <label>Email <span class="cm-req">*</span></label>
-        <input type="email" id="le_email" placeholder="hello@yourvenue.com" required/>
-      </div>
-      <div class="le-row">
-        <div class="le-field">
-          <label>Instagram <span class="cm-req-soft">(optional)</span></label>
-          <input type="text" id="le_ig" placeholder="@yourvenue"/>
-        </div>
-        <div class="le-field">
-          <label>Website <span class="cm-req-soft">(optional)</span></label>
-          <input type="text" id="le_web" placeholder="https://..."/>
+        <div class="le-nav-row">
+          <button type="button" class="le-btn-next" onclick="leNextStep(1)">Next: Event Details →</button>
         </div>
       </div>
 
-      <label class="cm-consent" style="margin-top:4px">
-        <input type="checkbox" id="le_consent" required/>
-        <span>I confirm this event information is accurate and I have the right to list it. I agree to Tonight's <a href="privacy.html" target="_blank">Privacy Policy</a> and <a href="privacy.html#terms" target="_blank">Terms of Service</a>.</span>
-      </label>
+      <!-- ── STEP 2: Event Details ── -->
+      <div class="wizard-step" id="leWizard2">
+        <div class="le-field">
+          <label>Event Name <span class="cm-req">*</span></label>
+          <input type="text" id="le_title" placeholder="e.g. Friday Deep House Night, Ladies Night with DJ Kim"/>
+        </div>
+        <div class="le-row">
+          <div class="le-field">
+            <label>Date <span class="cm-req">*</span></label>
+            <input type="date" id="le_date"/>
+          </div>
+          <div class="le-field">
+            <label>Doors Open <span class="cm-req">*</span></label>
+            <input type="time" id="le_time" value="20:00"/>
+          </div>
+        </div>
+        <div class="le-row">
+          <div class="le-field">
+            <label>Music Genre</label>
+            <select id="le_genre">
+              <option value="">Any / Mixed</option>
+              <option>Techno</option>
+              <option>House</option>
+              <option>EDM</option>
+              <option>Hip-Hop</option>
+              <option>R&amp;B</option>
+              <option>Pop</option>
+              <option>Rock</option>
+              <option>Jazz</option>
+              <option>Live Band</option>
+              <option>Acoustic</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="le-field">
+            <label>Expected Capacity</label>
+            <select id="le_capacity">
+              <option value="">Not specified</option>
+              <option>Under 50</option>
+              <option>50–150</option>
+              <option>150–500</option>
+              <option>500–2,000</option>
+              <option>2,000+</option>
+            </select>
+          </div>
+        </div>
+        <div class="le-field">
+          <label>Event Description <span class="cm-req">*</span></label>
+          <textarea id="le_desc" placeholder="Describe the night — who's playing, what to expect, dress code, age limit…" rows="3"></textarea>
+        </div>
+        <div class="le-field">
+          <label>Special Offer <span class="cm-req-soft">(optional)</span></label>
+          <input type="text" id="le_offer" placeholder="e.g. Free entry on guestlist before midnight"/>
+        </div>
+        <div class="le-field">
+          <label>Event Flyer / Image <span class="cm-req-soft">(optional)</span></label>
+          <input type="file" id="le_image_file" accept="image/*" style="font-size:13px;color:var(--text2)" onchange="leFlyerPreview(this)"/>
+          <img id="le_img_preview" class="le-img-preview" alt="Flyer preview"/>
+          <input type="hidden" id="le_imageData"/>
+        </div>
+        <div class="le-nav-row">
+          <button type="button" class="le-btn-back" onclick="lePrevStep(2)">← Back</button>
+          <button type="button" class="le-btn-next" onclick="leNextStep(2)">Next: Review →</button>
+        </div>
+      </div>
 
-      <button type="submit" class="le-submit" id="leSubmitBtn">
-        <span id="leSubmitLabel">Submit Event for Review →</span>
-      </button>
-      <p class="cm-privacy">We review all submissions within 24 hours. We'll contact you via WhatsApp or email.</p>
+      <!-- ── STEP 3: Review & Submit ── -->
+      <div class="wizard-step" id="leWizard3">
+        <div class="le-review-box" id="leReviewBox"></div>
+        <label class="cm-consent">
+          <input type="checkbox" id="le_consent"/>
+          <span>I confirm this event information is accurate and I have the right to list it. I agree to Tonight's <a href="privacy.html" target="_blank">Privacy Policy</a> and <a href="privacy.html#terms" target="_blank">Terms of Service</a>.</span>
+        </label>
+        <div class="le-nav-row">
+          <button type="button" class="le-btn-back" onclick="lePrevStep(3)">← Edit</button>
+          <button type="submit" class="le-btn-next" id="leSubmitBtn"><span id="leSubmitLabel">Submit Event →</span></button>
+        </div>
+        <p class="cm-privacy">We review all submissions within 24 hours. We'll contact you via WhatsApp or email.</p>
+      </div>
+
     </form>
   </div>
 </div>
@@ -2026,9 +2190,10 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
     </div>
     <div style="padding:20px 24px calc(24px + env(safe-area-inset-bottom))">
       <div class="deal-code-box">
-        <div class="deal-code-label">Show this at the door</div>
-        <div class="deal-code" id="dealCode">TN-DEAL-0000</div>
-        <div class="deal-code-sub">Valid <span id="dealWindow">tonight</span> · Free to claim</div>
+        <div class="deal-code-label">Your Deal QR — Show at the door</div>
+        <div id="dealQrWrap" style="display:flex;justify-content:center;margin:10px 0 6px"></div>
+        <div class="deal-code" id="dealCode" style="font-size:13px;letter-spacing:2px;margin-bottom:2px">TN-DEAL-0000</div>
+        <div class="deal-code-sub">Valid <span id="dealWindow">tonight</span> · Tap to save · Free to claim</div>
       </div>
       <div class="deal-steps">
         <div class="deal-step"><span class="deal-step-n">1</span><span>Save or screenshot this screen</span></div>
@@ -2485,11 +2650,14 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
       <div class="ditem active" onclick="showPro('overview',this)"><span class="di">📊</span>Overview</div>
       <div class="ditem" onclick="showPro('events',this)"><span class="di">🎉</span>My Events</div>
       <div class="ditem" onclick="showPro('add',this)"><span class="di">➕</span>Add Event</div>
+      <div class="ditem" onclick="showPro('guests',this)"><span class="di">👥</span>Guests CRM</div>
+      <div class="ditem" onclick="showPro('analytics',this)"><span class="di">📈</span>Analytics</div>
       <div class="ditem" onclick="showPro('promos',this)"><span class="di">🔥</span>Promotions</div>
       <div class="ditem" onclick="showPro('offers',this)"><span class="di">💼</span>Offers</div>
       <div class="ditem" onclick="showPro('messages',this)"><span class="di">💬</span>Messages</div>
-      <div class="ditem" onclick="showPro('scanner',this)"><span class="di">📷</span>Scan Tickets</div>
+      <div class="ditem" onclick="showPro('scanner',this)"><span class="di">📷</span>Scanner</div>
       <div class="ditem" onclick="showPro('profile',this)"><span class="di">🏢</span>Profile</div>
+      <div class="ditem" onclick="showPro('settings',this)"><span class="di">⚙️</span>Settings</div>
     </div>
     <div class="dsout" onclick="closeProDash()" style="margin-bottom:8px">← Back to App</div>
     <div class="dsout" onclick="signOut()">🚪 Sign Out</div>
@@ -3737,7 +3905,7 @@ function _tktDoneBlock(tk){
       <div class="bar-sub">Show at venue entry · Tonight App · Free guestlist request</div>
     </div>
   </div>
-  <button class="fsub" style="background:#f5c842;color:#000;margin-bottom:10px" onclick="sendTicketEmail('${tk.ref}')">📧 Send to ${tk.buyerEmail}</button>
+  <button class="fsub" style="background:#f5c842;color:#000;margin-bottom:10px" onclick="sendTicketEmail('${tk.ref}');this.textContent='📧 QR resent to ${tk.buyerEmail} ✓';this.disabled=true">📧 Resend QR to ${tk.buyerEmail}</button>
   <button class="fsub" style="background:rgba(255,255,255,.08);color:var(--text);border:1px solid var(--border)" onclick="closeOverlay('tktOverlay');openUser();showUTab('tickets',null)">View in My Requests →</button>
   <p style="font-size:10px;color:rgba(255,255,255,.25);text-align:center;margin-top:8px;line-height:1.6">This is a free guestlist request, not a paid ticket. Entry is subject to venue confirmation. Tonight does not charge for guestlist requests.</p>`;
 }
@@ -3815,31 +3983,47 @@ function confirmBooking(){
   saveTicket(tk);
   tStep=2;
   renderTkt();
-  toast(tBookType==='guestlist'?'You\'re on the guestlist! See you there 🎉':'You\'re booked! Check your email for your ticket','ok');
-  // auto-send email after QR renders
-  setTimeout(()=>sendTicketEmail(tk.ref), 1200);
+  toast('You\'re on the list! 🎉 QR ticket being sent to '+emailVal,'ok');
+  // Send real server email with QR after QR renders
+  setTimeout(()=>sendTicketEmail(tk.ref), 1400);
 }
 
-function sendTicketEmail(ref){
+// Deliver QR ticket to guest via Google Apps Script (real server email)
+async function sendTicketEmail(ref){
   const tk=getTickets().find(t=>t.ref===ref)||lastTicket;
-  if(!tk) return;
-  const subject=encodeURIComponent('Your Tonight Ticket — '+tk.eventTitle);
-  const body=encodeURIComponent(
-    'Hi '+tk.buyerName+',\n\n'+
-    'Your entry ticket for '+tk.eventTitle+' is confirmed!\n\n'+
-    '━━━━━━━━━━━━━━━━━━━━━━━━━━\n'+
-    '  EVENT    : '+tk.eventTitle+'\n'+
-    '  DATE     : '+tk.date+'\n'+
-    '  VENUE    : '+tk.venue+', '+tk.city+'\n'+
-    '  GUESTS   : '+tk.qty+' '+(tk.qty===1?'person':'people')+'\n'+
-    '  TYPE     : '+tk.ticketType+'\n'+
-    '  REF      : '+tk.ref+'\n'+
-    '━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n'+
-    'Show this reference at the door. Staff will scan your QR in the Tonight app.\n\n'+
-    'See you tonight!\n— Tonight Team'
-  );
-  window.location.href='mailto:'+tk.buyerEmail+'?subject='+subject+'&body='+body;
-  toast('📧 Opening email to '+tk.buyerEmail,'ok');
+  if(!tk||!tk.buyerEmail) return;
+  // Only fire if webhook is configured
+  if(!COMMUNITY_WEBHOOK||COMMUNITY_WEBHOOK==='YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL'){
+    toast('⚠️ Webhook not set up — QR saved locally only','ok');
+    return;
+  }
+  try{
+    const _dt=getDeviceType();
+    await fetch(COMMUNITY_WEBHOOK,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        source:      'guestlist-join',
+        ref:         tk.ref,
+        buyerName:   tk.buyerName,
+        buyerEmail:  tk.buyerEmail,
+        buyerPhone:  tk.buyerPhone,
+        eventTitle:  tk.eventTitle,
+        date:        tk.date,
+        venue:       tk.venue,
+        city:        tk.city,
+        ticketType:  tk.ticketType,
+        qty:         tk.qty,
+        issuedAt:    tk.issuedAt,
+        deviceType:  _dt.device,
+        os:          _dt.os
+      })
+    });
+    toast('📧 QR ticket sent to '+tk.buyerEmail,'ok');
+  }catch(err){
+    console.warn('Webhook failed — ticket saved locally:',err);
+    toast('QR saved locally — email will retry','ok');
+  }
 }
 
 // ── TICKETING / QR ──
@@ -3943,7 +4127,16 @@ function closeOverlay(id){
   }
 }
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)closeOverlay(o.id);}));
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.overlay.open').forEach(o=>closeOverlay(o.id));if(document.getElementById('magReaderOl').classList.contains('open'))closeMagReader();}});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('proDash').classList.contains('open')){closeProDash();return;}
+    if(document.getElementById('userDash').classList.contains('open')){closeUserDash();return;}
+    if(document.getElementById('searchOverlay')&&document.getElementById('searchOverlay').classList.contains('open')){closeSearch();return;}
+    if(document.getElementById('cityModal')&&document.getElementById('cityModal').classList.contains('open')){document.getElementById('cityModal').classList.remove('open');return;}
+    document.querySelectorAll('.overlay.open').forEach(o=>closeOverlay(o.id));
+    if(document.getElementById('magReaderOl').classList.contains('open'))closeMagReader();
+  }
+});
 
 // ── AUTH ──
 function openAuth(tab){
@@ -4112,6 +4305,7 @@ function openPro(){
   document.body.style.top='-'+_scrollY+'px';
   document.body.style.width='100%';
   showPro('overview',document.querySelector('.ditem.active'));
+  history.pushState({tnScreen:'pro-dash'},'Pro Dashboard','#pro');
 }
 function closeProDash(){
   document.getElementById('proDash').classList.remove('open');
@@ -4120,20 +4314,71 @@ function closeProDash(){
   document.body.style.top='';
   document.body.style.width='';
   window.scrollTo(0,_scrollY);
+  if(location.hash==='#pro') history.back();
 }
 function showPro(page,el){
   document.querySelectorAll('.ditem').forEach(i=>i.classList.remove('active'));
   if(el)el.classList.add('active');
   const m=document.getElementById('proMain');
-  if(page==='overview'){m.innerHTML=`
-    <div class="dhead"><h2>Dashboard</h2><button class="btn btn-white" onclick="showPro('add',null)">+ Add Event</button></div>
-    <div class="dstats">
-      <div class="dstat"><div class="dn">3</div><div class="dl">Active Events</div></div>
-      <div class="dstat"><div class="dn">842</div><div class="dl">Guestlist Views</div></div>
-      <div class="dstat"><div class="dn">247</div><div class="dl">Guestlist Joins</div></div>
-      <div class="dstat"><div class="dn">4.8★</div><div class="dl">Rating</div></div>
+  if(page==='overview'){
+    const allTkts=getTickets();
+    const checkedIn=allTkts.filter(t=>t.status==='used'||t.status==='checked_in').length;
+    const totalGuests=allTkts.reduce((s,t)=>s+(t.qty||1),0);
+    const convRate=allTkts.length?Math.round(checkedIn/allTkts.length*100):0;
+    const now=new Date();
+    const recent5=[...allTkts].reverse().slice(0,5);
+    const _proEvts=[
+      {e:'🎛',g:'grad-purple',t:'Subculture Saigon',d:'Apr 5, 2026',views:320,joins:94,cap:600,genre:'Techno'},
+      {e:'🌿',g:'grad-teal',t:'Nora En Pure — Bali',d:'Jun 1, 2026',views:180,joins:51,cap:500,genre:'Melodic'},
+      {e:'🎷',g:'grad-indigo',t:'Jazz & Neon Hanoi',d:'Apr 22, 2026',views:210,joins:63,cap:300,genre:'Jazz'},
+    ];
+    m.innerHTML=`
+    <div class="dhead"><h2>Overview</h2><button class="btn btn-white" onclick="showPro('add',null)">+ Add Event</button></div>
+    <div class="overview-actions">
+      <div class="ov-action" onclick="showPro('scanner',document.querySelectorAll('.ditem')[8])"><div class="oa-ico">📷</div><div><div style="font-weight:700">Scan Tickets</div><div style="font-size:11px;color:var(--text3)">Check guests in at the door</div></div></div>
+      <div class="ov-action" onclick="showPro('guests',document.querySelectorAll('.ditem')[3])"><div class="oa-ico">👥</div><div><div style="font-weight:700">Guest CRM</div><div style="font-size:11px;color:var(--text3)">${allTkts.length} total registrations</div></div></div>
+      <div class="ov-action" onclick="showPro('promos',document.querySelectorAll('.ditem')[5])"><div class="oa-ico">🔥</div><div><div style="font-weight:700">Run Promotion</div><div style="font-size:11px;color:var(--text3)">Push notify nearby users</div></div></div>
+      <div class="ov-action" onclick="showPro('analytics',document.querySelectorAll('.ditem')[4])"><div class="oa-ico">📈</div><div><div style="font-weight:700">Analytics</div><div style="font-size:11px;color:var(--text3)">Views, joins, conversion</div></div></div>
     </div>
-    <div class="dsec"><h3>Recent Events</h3>${proRows()}</div>`;}
+    <div class="dstats">
+      <div class="dstat"><div class="dn">${_proEvts.length}</div><div class="dl">Active Events</div><div class="dstat-delta up">↑ +1 this week</div></div>
+      <div class="dstat"><div class="dn">${_proEvts.reduce((s,e)=>s+e.views,0)}</div><div class="dl">Total Views</div><div class="dstat-delta up">↑ +18% vs last week</div></div>
+      <div class="dstat"><div class="dn">${allTkts.length||_proEvts.reduce((s,e)=>s+e.joins,0)}</div><div class="dl">Guestlist Joins</div><div class="dstat-delta up">↑ +12% vs last week</div></div>
+      <div class="dstat"><div class="dn">${convRate||29}%</div><div class="dl">Conversion Rate</div><div class="dstat-delta ${convRate>25?'up':'dn'}">${convRate>25?'↑ Above avg':'↓ Below avg'}</div></div>
+    </div>
+    <div class="dsec"><h3>🎉 My Events — Performance</h3>
+      ${_proEvts.map(ev=>`
+      <div class="an-evt-row">
+        <div class="an-evt-ico ${ev.g}">${ev.e}</div>
+        <div class="an-evt-info">
+          <div class="an-evt-title">${ev.t}</div>
+          <div class="an-evt-meta">${ev.d} · ${ev.genre}</div>
+          <div style="margin-top:5px">
+            <div class="an-bar-track" style="height:5px"><div class="an-bar-fill" style="width:${Math.round(ev.joins/ev.views*100)}%"></div></div>
+            <div style="font-size:10px;color:var(--text3);margin-top:3px">${ev.joins} joins of ${ev.views} views</div>
+          </div>
+        </div>
+        <div class="an-evt-conv"><div class="an-evt-conv-val">${Math.round(ev.joins/ev.views*100)}%</div><div class="an-evt-conv-label">conv.</div></div>
+      </div>`).join('')}
+    </div>
+    <div class="dsec"><h3>⚡ Live Activity Feed</h3>
+      <div class="activity-feed">
+        ${recent5.length?recent5.map(tk=>`
+        <div class="af-row">
+          <div class="af-dot join"></div>
+          <div class="af-body"><strong>${tk.buyerName}</strong> joined guestlist — ${tk.eventTitle}</div>
+          <div class="af-time">${new Date(tk.issuedAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
+        </div>`).join('')
+        :[
+          {n:'Minh Tran',e:'Subculture Saigon',t:'2m ago',type:'join'},
+          {n:'Sophie L.',e:'Jazz & Neon Hanoi',t:'8m ago',type:'join'},
+          {n:'Chen Wei',e:'Nora En Pure',t:'15m ago',type:'scan'},
+          {n:'Anna K.',e:'Subculture Saigon',t:'22m ago',type:'join'},
+          {n:'Duc Nguyen',e:'Jazz & Neon Hanoi',t:'31m ago',type:'view'},
+        ].map(a=>`<div class="af-row"><div class="af-dot ${a.type}"></div><div class="af-body"><strong>${a.n}</strong> ${a.type==='join'?'joined guestlist':a.type==='scan'?'✅ checked in':'viewed event'} — ${a.e}</div><div class="af-time">${a.t}</div></div>`).join('')}
+      </div>
+    </div>`;
+  }
   if(page==='events'){m.innerHTML=`<div class="dhead"><h2>My Events</h2><button class="btn btn-white" onclick="showPro('add',null)">+ Add Event</button></div>${proRows()}`;}
   if(page==='add'){m.innerHTML=`
     <div class="dhead"><h2>Add New Event</h2></div>
@@ -4203,6 +4448,114 @@ function showPro(page,el){
       </div>
       <button class="fsub" style="width:auto;padding:10px 28px;margin-top:10px" onclick="saveProProfile()">Save Profile</button>
     </div>`;}
+  if(page==='guests'){
+    const allTkts=getTickets();
+    const _crmFilter=window._crmFilter||'';
+    const _crmSearch=window._crmSearch||'';
+    let list=allTkts;
+    if(_crmSearch) list=list.filter(t=>(t.buyerName+t.buyerEmail+t.buyerPhone).toLowerCase().includes(_crmSearch.toLowerCase()));
+    const exportCSV=()=>{
+      const hdr='Name,Email,Phone,Event,Type,Guests,Status,Date';
+      const rows=allTkts.map(t=>[t.buyerName,t.buyerEmail,t.buyerPhone,t.eventTitle,t.ticketType,t.qty,t.status,t.date].map(v=>'"'+(v||'')+'"').join(','));
+      const blob=new Blob([hdr+'\n'+rows.join('\n')],{type:'text/csv'});
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='tonight-guests.csv';a.click();
+      toast('CSV downloaded','ok');
+    };
+    m.innerHTML=`
+    <div class="dhead"><h2>Guests CRM</h2>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" style="font-size:11px" onclick="(${exportCSV.toString()})()">⬇ Export CSV</button>
+        <span style="font-size:12px;color:var(--text3);align-self:center">${allTkts.length} guests</span>
+      </div>
+    </div>
+    <div class="dsec" style="padding:14px">
+      <div class="crm-search-bar">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input placeholder="Search by name, email or phone…" oninput="window._crmSearch=this.value;showPro('guests',null)" value="${_crmSearch}"/>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="crm-table">
+          <thead><tr><th></th><th>Guest</th><th>Contact</th><th>Event</th><th>Type</th><th>Status</th></tr></thead>
+          <tbody>
+          ${list.length?list.map(tk=>{
+            const init=(tk.buyerName||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+            const isNew=!allTkts.slice(0,allTkts.indexOf(tk)).some(t=>t.buyerEmail===tk.buyerEmail);
+            return`<tr>
+              <td><div class="crm-av">${init}</div></td>
+              <td>
+                <div style="font-weight:600;font-size:13px">${tk.buyerName}${isNew?'<span class="scan-badge scan-badge-new" style="margin-left:6px">New</span>':''}</div>
+                <div style="font-size:11px;color:var(--text3)">${tk.buyerEmail||'—'}</div>
+              </td>
+              <td style="color:var(--text2);font-size:12px">${tk.buyerPhone||'—'}</td>
+              <td><div style="font-size:12px;font-weight:500">${tk.eventTitle}</div><div style="font-size:10px;color:var(--text3)">${tk.date||''}</div></td>
+              <td><span style="font-size:11px;background:rgba(255,255,255,.06);padding:2px 8px;border-radius:12px">${tk.ticketType} ×${tk.qty||1}</span></td>
+              <td><span class="crm-status ${tk.status==='valid'?'valid':'used'}">${tk.status==='valid'?'✓ Valid':'✗ Used'}</span></td>
+            </tr>`;}).join('')
+          :`<tr><td colspan="6"><div class="crm-empty"><div style="font-size:36px;margin-bottom:10px">👥</div><p>No guests yet. Guests appear here after joining guestlist.</p></div></td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  }
+
+  if(page==='analytics'){
+    const allTkts=getTickets();
+    const checkedIn=allTkts.filter(t=>t.status==='used'||t.status==='checked_in').length;
+    const convRate=allTkts.length?Math.round(checkedIn/allTkts.length*100):0;
+    const _proEvts=[
+      {e:'🎛',g:'grad-purple',t:'Subculture Saigon',views:320,joins:94,cap:600},
+      {e:'🌿',g:'grad-teal',t:'Nora En Pure — Bali',views:180,joins:51,cap:500},
+      {e:'🎷',g:'grad-indigo',t:'Jazz & Neon Hanoi',views:210,joins:63,cap:300},
+    ];
+    const totalViews=_proEvts.reduce((s,e)=>s+e.views,0);
+    const totalJoins=_proEvts.reduce((s,e)=>s+e.joins,0);
+    const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const dayData=[12,18,24,31,58,89,43];
+    const maxDay=Math.max(...dayData);
+    m.innerHTML=`
+    <div class="dhead"><h2>Analytics</h2><span style="font-size:12px;color:var(--text3)">Last 30 days</span></div>
+    <div class="an-kpi-grid">
+      <div class="an-kpi"><div class="an-kpi-val">${totalViews+allTkts.length}</div><div class="an-kpi-label">Total Views</div><div class="an-kpi-delta up">↑ +18% vs last month</div></div>
+      <div class="an-kpi"><div class="an-kpi-val">${totalJoins+allTkts.length}</div><div class="an-kpi-label">Guestlist Joins</div><div class="an-kpi-delta up">↑ +12% vs last month</div></div>
+      <div class="an-kpi"><div class="an-kpi-val">${Math.max(convRate,29)}%</div><div class="an-kpi-label">Conversion</div><div class="an-kpi-delta up">↑ +3pp vs last month</div></div>
+    </div>
+    <div class="dsec">
+      <h3>📅 Guestlist Joins by Day of Week</h3>
+      ${days.map((d,i)=>`
+      <div class="an-bar-row">
+        <div class="an-bar-label">${d}</div>
+        <div class="an-bar-track"><div class="an-bar-fill" style="width:${Math.round(dayData[i]/maxDay*100)}%"></div></div>
+        <div class="an-bar-val">${dayData[i]}</div>
+      </div>`).join('')}
+      <p style="font-size:11px;color:var(--text3);margin-top:10px">📌 Fri–Sat drives 52% of all joins — best days to run promotions.</p>
+    </div>
+    <div class="dsec">
+      <h3>🎉 Event Performance</h3>
+      ${_proEvts.map(ev=>`
+      <div class="an-evt-row">
+        <div class="an-evt-ico ${ev.g}">${ev.e}</div>
+        <div class="an-evt-info">
+          <div class="an-evt-title">${ev.t}</div>
+          <div class="an-evt-meta">${ev.views} views · ${ev.joins} joins · cap ${ev.cap}</div>
+          <div style="margin-top:6px;display:flex;align-items:center;gap:6px">
+            <div class="an-bar-track" style="flex:1"><div class="an-bar-fill" style="width:${Math.round(ev.joins/ev.cap*100)}%"></div></div>
+            <span style="font-size:10px;color:var(--text3)">${Math.round(ev.joins/ev.cap*100)}% full</span>
+          </div>
+        </div>
+        <div class="an-evt-conv"><div class="an-evt-conv-val">${Math.round(ev.joins/ev.views*100)}%</div><div class="an-evt-conv-label">conv.</div></div>
+      </div>`).join('')}
+    </div>
+    <div class="dsec">
+      <h3>🌍 Top Cities</h3>
+      ${[['Ho Chi Minh City',47],['Hanoi',31],['Bali',14],['Hanoi',8]].map(([city,pct])=>`
+      <div class="an-bar-row">
+        <div class="an-bar-label" style="width:110px;text-align:left;font-size:12px">${city}</div>
+        <div class="an-bar-track"><div class="an-bar-fill" style="width:${pct}%"></div></div>
+        <div class="an-bar-val">${pct}%</div>
+      </div>`).join('')}
+    </div>`;
+  }
+
   if(page==='promos'){
     const myPromos=getPromos().filter(p=>p.venueId==='pro_user');
     m.innerHTML=`
@@ -4250,10 +4603,19 @@ function showPro(page,el){
     </div>`;
   }
   if(page==='scanner'){
+    const allTkts=getTickets();
+    const checkedIn=allTkts.filter(t=>t.status==='used'||t.status==='checked_in').length;
+    const pending=allTkts.filter(t=>t.status==='valid').length;
+    const scanLog=JSON.parse(sessionStorage.getItem('_scanLog')||'[]');
     m.innerHTML=`
-    <div class="dhead"><h2>Scan Tickets</h2></div>
-    <div class="dsec"><h3>📷 Ticket Scanner</h3>
-      <p style="font-size:13px;color:var(--text2);font-weight:300;margin-bottom:18px;line-height:1.7">Point the camera at a customer's QR code to validate their Tonight ticket and check them in.</p>
+    <div class="dhead"><h2>Ticket Scanner</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
+      <div class="dstat"><div class="dn" style="font-size:22px;color:var(--green)">${checkedIn}</div><div class="dl">Checked In</div></div>
+      <div class="dstat"><div class="dn" style="font-size:22px">${pending}</div><div class="dl">Pending</div></div>
+      <div class="dstat"><div class="dn" style="font-size:22px">${allTkts.length}</div><div class="dl">Total Guests</div></div>
+    </div>
+    <div class="dsec"><h3>📷 Camera Scanner</h3>
+      <p style="font-size:13px;color:var(--text2);font-weight:300;margin-bottom:16px;line-height:1.7">Point camera at guest's QR code. Guest profile and ticket info appear instantly — no manual lookup needed.</p>
       <div class="scanner-wrap">
         <div class="scanner-video-wrap" id="scannerWrap">
           <video id="scannerVideo" autoplay playsinline muted></video>
@@ -4263,18 +4625,39 @@ function showPro(page,el){
             <div class="scan-line"></div>
           </div>
         </div>
-        <div id="scanResult" style="display:none;width:100%;max-width:380px"></div>
+        <div id="scanResult" style="width:100%;max-width:420px;display:none"></div>
         <div id="scanIndicator" style="display:none;align-items:center;gap:8px;font-size:12px;color:var(--green);font-weight:600;letter-spacing:.5px">
-          <span style="width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1s infinite"></span>SCANNING
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1s infinite"></span>SCANNING — READY
         </div>
-        <div style="display:flex;gap:10px;width:100%;max-width:380px">
+        <div style="display:flex;gap:10px;width:100%;max-width:420px">
           <button class="fsub" id="scanStartBtn" onclick="startScanner()" style="margin:0;display:none">Start Camera</button>
-          <button class="btn btn-ghost" id="scanStopBtn" onclick="stopScanner()" style="display:none;flex:1">■ Stop Scanner</button>
+          <button class="btn btn-ghost" id="scanStopBtn" onclick="stopScanner()" style="display:none;flex:1">■ Stop</button>
         </div>
-        <p style="font-size:11px;color:var(--text3);font-weight:300;text-align:center">Point camera at Tonight QR code · Registers instantly</p>
+        <p style="font-size:11px;color:var(--text3);font-weight:300;text-align:center">Tap the client card to dismiss · Auto-clears after 4s</p>
+      </div>
+    </div>
+    <div class="dsec">
+      <h3>🔍 Manual Lookup</h3>
+      <div style="display:flex;gap:8px">
+        <input class="fi" id="manualRef" placeholder="Paste ticket ref e.g. TN-ABCD-1234-XY" style="flex:1;font-size:13px"/>
+        <button class="btn btn-white" style="padding:9px 16px;font-size:13px;white-space:nowrap" onclick="processScan(document.getElementById('manualRef').value.trim())">Look Up</button>
+      </div>
+    </div>
+    <div class="dsec">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <h3 style="margin:0">⚡ This Session — Scan Log</h3>
+        <span style="font-size:11px;color:var(--text3)">${scanLog.length} scans</span>
+      </div>
+      <div class="scan-log">
+        ${scanLog.length?scanLog.map(s=>`
+        <div class="scan-log-row">
+          <div class="scan-log-dot ${s.ok?'ok':'err'}"></div>
+          <div class="scan-log-name">${s.name}</div>
+          <div class="scan-log-time">${s.time}</div>
+        </div>`).join('')
+        :`<div style="color:var(--text3);font-size:13px;padding:12px 0;text-align:center">No scans yet this session</div>`}
       </div>
     </div>`;
-    // auto-start camera immediately
     setTimeout(()=>startScanner(), 150);
   }
   if(page==='billing'){m.innerHTML=`
@@ -4345,6 +4728,38 @@ function showPro(page,el){
           </div>
         </div>`).join('')
       :`<div style="color:var(--text3);font-size:13px;font-weight:300;padding:8px 0;grid-column:1/-1">No offers yet. Create your first one above.</div>`}
+    </div>`;}
+
+  if(page==='settings'){
+    const np=JSON.parse(localStorage.getItem('tn_pro_notif_prefs')||'{"newBookings":true,"messages":true,"marketing":true}');
+    const ep=JSON.parse(localStorage.getItem('tn_pro_email_prefs')||'{"support":true,"digest":true}');
+    const pp=getProProfile();
+    m.innerHTML=`
+    <div class="dhead"><h2>Settings</h2></div>
+    <div class="dsec">
+      <h3>👤 Account Info</h3>
+      <div class="fgrid">
+        <div class="fg"><label>Business Name</label><input class="fi" value="${pp.name||''}" readonly style="background:var(--bg2);opacity:.6"/></div>
+        <div class="fg"><label>Email</label><input class="fi" value="${pp.email||''}" readonly style="background:var(--bg2);opacity:.6"/></div>
+      </div>
+    </div>
+    <div class="dsec">
+      <h3>🔔 Notification Preferences</h3>
+      <label style="display:flex;align-items:center;gap:10px;margin-bottom:12px;cursor:pointer;font-size:13px"><input type="checkbox" id="notif_new_bookings" ${np.newBookings?'checked':''} style="accent-color:var(--green);width:16px;height:16px"/> New guestlist requests</label>
+      <label style="display:flex;align-items:center;gap:10px;margin-bottom:12px;cursor:pointer;font-size:13px"><input type="checkbox" id="notif_messages" ${np.messages?'checked':''} style="accent-color:var(--green);width:16px;height:16px"/> Messages from Tonight team</label>
+      <label style="display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer;font-size:13px"><input type="checkbox" id="notif_marketing" ${np.marketing?'checked':''} style="accent-color:var(--green);width:16px;height:16px"/> Announcements &amp; tips</label>
+      <button class="btn btn-white" style="font-size:12px;padding:8px 20px" onclick="saveNotifSettings()">Save Preferences</button>
+    </div>
+    <div class="dsec">
+      <h3>📧 Email Preferences</h3>
+      <label style="display:flex;align-items:center;gap:10px;margin-bottom:12px;cursor:pointer;font-size:13px"><input type="checkbox" id="email_support" ${ep.support?'checked':''} style="accent-color:var(--green);width:16px;height:16px"/> Support &amp; reply emails</label>
+      <label style="display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer;font-size:13px"><input type="checkbox" id="email_digest" ${ep.digest?'checked':''} style="accent-color:var(--green);width:16px;height:16px"/> Weekly activity digest</label>
+      <button class="btn btn-white" style="font-size:12px;padding:8px 20px" onclick="saveEmailSettings()">Save Preferences</button>
+    </div>
+    <div class="dsec" style="border:1px solid rgba(255,59,92,.2)">
+      <h3 style="color:#ff3b5c">⚠️ Danger Zone</h3>
+      <p style="font-size:12px;color:var(--text3);line-height:1.6;margin-bottom:14px">Permanently deletes your account data from this device. Cannot be undone.</p>
+      <button class="btn" style="background:rgba(255,59,92,.12);color:#ff3b5c;border:1px solid rgba(255,59,92,.3);font-size:12px" onclick="if(confirm('Delete all account data? This cannot be undone.'))deleteAllData()">Delete Account &amp; All Data</button>
     </div>`;}
 
   if(page==='messages'){
@@ -4755,23 +5170,49 @@ function processScan(data){
     _scanAutoReset(2500);
     return;
   }
-  // ✅ Valid — register immediately, then auto-clear
+  // ✅ Valid — show rich client card, register, add to scan log
   markUsed(ref);
+  const allTkts=JSON.parse(localStorage.getItem('tn_tickets')||'[]');
+  const prevVisits=allTkts.filter(t=>t.buyerEmail&&t.buyerEmail===tk.buyerEmail&&t.ref!==ref).length;
+  const init=(tk.buyerName||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const issuedDate=tk.issuedAt?new Date(tk.issuedAt).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'—';
+
+  // Add to scan log
+  const scanLog=JSON.parse(sessionStorage.getItem('_scanLog')||'[]');
+  scanLog.unshift({name:tk.buyerName,time:new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}),ok:true});
+  if(scanLog.length>20)scanLog.pop();
+  sessionStorage.setItem('_scanLog',JSON.stringify(scanLog));
+
   res.style.display='block';
-  res.className='scan-result ok';
+  res.className='';
   res.innerHTML=`
-    <div class="scan-result-icon" style="font-size:48px;line-height:1;margin-bottom:6px">✅</div>
-    <div class="scan-result-title" style="font-size:17px">Checked In!</div>
-    <div class="scan-result-sub">
-      <strong style="font-size:15px;color:#fff">${tk.buyerName}</strong><br>
-      ${tk.buyerEmail?`<span style="font-size:11px;color:var(--text3)">${tk.buyerEmail}${tk.buyerPhone?' · '+tk.buyerPhone:''}</span><br>`:''}
-      ${tk.eventTitle}<br>
-      🎟 ${tk.ticketType} × ${tk.qty}<br>
-      <span style="color:rgba(0,208,132,.9);font-size:11px">${tk.ref} · Registered ✓</span>
-    </div>
-    <div style="font-size:11px;color:var(--text3);margin-top:10px">Clearing in 2s…</div>`;
-  toast('✅ '+tk.buyerName+' — checked in','ok');
-  _scanAutoReset(2500);
+    <div class="scan-client-card">
+      <div class="scan-client-top">
+        <div class="scan-client-av">${init}</div>
+        <div class="scan-client-info">
+          <div class="scan-client-name">${tk.buyerName}</div>
+          ${tk.buyerEmail?`<div class="scan-client-email">${tk.buyerEmail}</div>`:''}
+          ${tk.buyerPhone?`<div class="scan-client-phone">📱 ${tk.buyerPhone}</div>`:''}
+          <div class="scan-client-badges">
+            <span class="scan-badge scan-badge-ok">✓ Checked In</span>
+            ${prevVisits===0?'<span class="scan-badge scan-badge-new">⭐ First Visit</span>':''}
+            ${prevVisits>0?`<span class="scan-badge scan-badge-vip">👑 ${prevVisits+1}× Guest</span>`:''}
+          </div>
+        </div>
+      </div>
+      <div class="scan-ticket-strip">
+        <div class="scan-tfield"><div class="scan-tfield-label">Event</div><div class="scan-tfield-val" style="font-size:11px">${tk.eventTitle}</div></div>
+        <div class="scan-tfield"><div class="scan-tfield-label">Ticket Type</div><div class="scan-tfield-val">${tk.ticketType}</div></div>
+        <div class="scan-tfield"><div class="scan-tfield-label">Guests</div><div class="scan-tfield-val">${tk.qty||1} ${(tk.qty||1)===1?'person':'people'}</div></div>
+        <div class="scan-tfield"><div class="scan-tfield-label">Booked</div><div class="scan-tfield-val" style="font-size:11px">${issuedDate}</div></div>
+        <div class="scan-tfield"><div class="scan-tfield-label">Ref</div><div class="scan-tfield-val" style="font-size:10px;color:var(--text3)">${tk.ref}</div></div>
+        <div class="scan-tfield"><div class="scan-tfield-label">City</div><div class="scan-tfield-val">${tk.city||'—'}</div></div>
+      </div>
+      <div style="padding:10px 16px;font-size:11px;color:var(--text3);text-align:center">Auto-clearing in 4s · tap to dismiss</div>
+    </div>`;
+  res.querySelector('.scan-client-card').addEventListener('click',()=>{res.style.display='none';res.innerHTML='';});
+  toast('✅ '+tk.buyerName+' — '+tk.qty+' guest'+(tk.qty>1?'s':'')+' checked in','ok');
+  _scanAutoReset(4000);
 }
 function addTrow(){const r=document.createElement('div');r.className='trow';r.innerHTML=`<input class="fi" placeholder="Ticket name" style="flex:2"/><input class="fi" type="number" placeholder="Price"/><input class="fi" type="number" placeholder="Qty"/><button type="button" class="tdel" onclick="this.closest('.trow').remove()">✕</button>`;document.getElementById('trows').appendChild(r);}
 function prevImgs(inp){const p=document.getElementById('iprev');[...inp.files].forEach(f=>{const d=document.createElement('div');d.className='ithumb';d.innerHTML=`<img src="${URL.createObjectURL(f)}"/>`;p.appendChild(d);});}
@@ -4786,6 +5227,7 @@ function openUser(){
   document.body.style.width='100%';
   if(curUser)document.getElementById('udWelcome').textContent=`Welcome back, ${curUser.name.split(' ')[0]} 👋`;
   showUTab('upcoming',document.querySelector('.utab.active'));
+  history.pushState({tnScreen:'user-dash'},'My Account','#account');
 }
 function closeUserDash(){
   document.getElementById('userDash').classList.remove('open');
@@ -4794,7 +5236,93 @@ function closeUserDash(){
   document.body.style.top='';
   document.body.style.width='';
   window.scrollTo(0,_scrollY);
+  if(location.hash==='#account') history.back();
 }
+
+// ── BROWSER BACK BUTTON — close any open screen ──
+window.addEventListener('popstate',function(e){
+  if(document.getElementById('proDash').classList.contains('open')){
+    document.getElementById('proDash').classList.remove('open');
+    document.body.style.overflow='';document.body.style.position='';document.body.style.top='';document.body.style.width='';
+    window.scrollTo(0,_scrollY);return;
+  }
+  if(document.getElementById('userDash').classList.contains('open')){
+    document.getElementById('userDash').classList.remove('open');
+    document.body.style.overflow='';document.body.style.position='';document.body.style.top='';document.body.style.width='';
+    window.scrollTo(0,_scrollY);return;
+  }
+  document.querySelectorAll('.overlay.open').forEach(o=>closeOverlay(o.id));
+});
+
+// ── SETTINGS UTILITIES ──
+function saveNotifSettings(){
+  const p={newBookings:document.getElementById('notif_new_bookings').checked,messages:document.getElementById('notif_messages').checked,marketing:document.getElementById('notif_marketing').checked,savedAt:new Date().toISOString()};
+  localStorage.setItem('tn_pro_notif_prefs',JSON.stringify(p));
+  toast('Notification preferences saved','ok');
+}
+function saveEmailSettings(){
+  const p={support:document.getElementById('email_support').checked,digest:document.getElementById('email_digest').checked,savedAt:new Date().toISOString()};
+  localStorage.setItem('tn_pro_email_prefs',JSON.stringify(p));
+  toast('Email preferences saved','ok');
+}
+function deleteAllData(){
+  ['tn_pro_profile','tn_pro_offers','tn_pro_support','tn_promos','_leQueue','tn_pro_notif_prefs','tn_pro_email_prefs','tn_session','tn_accounts'].forEach(k=>localStorage.removeItem(k));
+  toast('Account data deleted','ok');
+  setTimeout(()=>location.reload(),1200);
+}
+
+// ── FORM AUTOSAVE / DRAFT RESTORE ──
+function autosaveDraft(formId,storageKey){
+  const form=document.getElementById(formId);
+  if(!form)return;
+  const inputs=form.querySelectorAll('input,textarea,select');
+  const save=()=>{
+    const draft={};
+    inputs.forEach(i=>{draft[i.id||i.name]=i.type==='checkbox'?i.checked:i.value;});
+    try{localStorage.setItem(storageKey,JSON.stringify({draft,savedAt:new Date().toISOString()}));}catch(_){}
+  };
+  inputs.forEach(i=>{i.addEventListener('blur',save);i.addEventListener('change',save);});
+}
+function restoreDraft(formId,storageKey){
+  const saved=localStorage.getItem(storageKey);
+  if(!saved)return false;
+  try{
+    const {draft}=JSON.parse(saved);
+    const form=document.getElementById(formId);
+    if(!form)return false;
+    Object.keys(draft).forEach(key=>{
+      const el=form.querySelector('#'+key+',[name="'+key+'"]');
+      if(!el)return;
+      if(el.type==='checkbox')el.checked=draft[key];
+      else el.value=draft[key];
+    });
+    return true;
+  }catch(_){return false;}
+}
+
+// ── SWIPE TO DISMISS MODALS ──
+function initSwipeDismiss(overlayId){
+  const overlay=document.getElementById(overlayId);
+  if(!overlay)return;
+  let startY=0,currentY=0,modal=null;
+  overlay.addEventListener('touchstart',e=>{startY=e.touches[0].clientY;modal=overlay.querySelector('.modal');},{passive:true});
+  overlay.addEventListener('touchmove',e=>{
+    if(!modal)return;
+    currentY=e.touches[0].clientY;
+    const dy=currentY-startY;
+    if(dy>0)modal.style.transform=`translateY(${dy}px)`;
+  },{passive:true});
+  overlay.addEventListener('touchend',()=>{
+    if(!modal)return;
+    if(currentY-startY>110){closeOverlay(overlayId);}
+    else{modal.style.transform='';}
+    startY=0;currentY=0;modal=null;
+  });
+}
+['listEventOverlay','dealOverlay','gatewayOverlay','proSignupOverlay','communityOverlay','authOverlay','evtOverlay','tktOverlay','waitlistOverlay'].forEach(id=>{
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>initSwipeDismiss(id),{once:false});
+  else initSwipeDismiss(id);
+});
 function showUTab(tab,el){
   document.querySelectorAll('.utab').forEach(t=>t.classList.remove('active'));
   if(el)el.classList.add('active');
@@ -5150,11 +5678,7 @@ function closeSearch(){
   if(inp) inp.value='';
   document.getElementById('searchResults').innerHTML='<div class="search-empty"><div class="se-ico">🔍</div><p>Start typing to find events</p></div>';
 }
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'){
-    if(document.getElementById('searchOverlay').classList.contains('open')){closeSearch();}
-  }
-});
+// Escape key is handled by the unified listener above
 function _runSearch(q){
   const res=document.getElementById('searchResults');
   if(!q.trim()){res.innerHTML='<div class="search-empty"><div class="se-ico">🔍</div><p>Start typing to find events</p></div>';return;}
@@ -5283,12 +5807,118 @@ async function _sendToEmail(data){
   }
 }
 
+// ── LISTING WIZARD HELPERS ──
+let _leCurrentStep = 1;
+
+function leSetStep(step){
+  _leCurrentStep = step;
+  [1,2,3].forEach(n=>{
+    const s=document.getElementById('leWizard'+n);
+    const l=document.getElementById('leStepLbl'+n);
+    if(s) s.classList.toggle('active',n===step);
+    if(l){
+      l.classList.toggle('active',n===step);
+      l.classList.toggle('done',n<step);
+    }
+  });
+  const form=document.getElementById('listEventForm');
+  if(form) form.scrollTop=0;
+}
+
+function leNextStep(from){
+  if(from===1){
+    const biz=document.getElementById('le_biz').value.trim();
+    const type=document.getElementById('le_type').value;
+    const city=document.getElementById('le_city').value;
+    const contact=document.getElementById('le_contact').value.trim();
+    const phone=document.getElementById('le_phone').value.trim();
+    const email=document.getElementById('le_email').value.trim();
+    if(!biz){toast('Please enter your business name','err');return;}
+    if(!type){toast('Please select venue type','err');return;}
+    if(!city){toast('Please select a city','err');return;}
+    if(!contact){toast('Please enter your name','err');return;}
+    if(!phone){toast('Please enter a WhatsApp number','err');return;}
+    if(!email||!email.includes('@')){toast('Please enter a valid email','err');return;}
+  }
+  if(from===2){
+    const title=document.getElementById('le_title').value.trim();
+    const date=document.getElementById('le_date').value;
+    const desc=document.getElementById('le_desc').value.trim();
+    if(!title){toast('Please enter the event name','err');return;}
+    if(!date){toast('Please select the event date','err');return;}
+    if(!desc){toast('Please describe the event','err');return;}
+    leRenderReview();
+  }
+  leSetStep(from+1);
+}
+
+function lePrevStep(from){
+  leSetStep(from-1);
+}
+
+function leRenderReview(){
+  const v=id=>document.getElementById(id).value.trim();
+  const box=document.getElementById('leReviewBox');
+  if(!box)return;
+  box.innerHTML=`
+    <div style="display:grid;gap:6px">
+      <div><strong>Business:</strong> ${v('le_biz')} · ${v('le_type')}</div>
+      <div><strong>City:</strong> ${v('le_city')}${v('le_address')?' · '+v('le_address'):''}</div>
+      <div><strong>Event:</strong> ${v('le_title')}</div>
+      <div><strong>Date:</strong> ${v('le_date')} at ${v('le_time')||'20:00'}</div>
+      ${v('le_genre')?`<div><strong>Genre:</strong> ${v('le_genre')}</div>`:''}
+      ${v('le_offer')?`<div><strong>Offer:</strong> ${v('le_offer')}</div>`:''}
+      <div><strong>Contact:</strong> ${v('le_contact')} · ${v('le_phone')}</div>
+      <div><strong>Email:</strong> ${v('le_email')}</div>
+    </div>`;
+}
+
+function leFlyerPreview(inp){
+  const file=inp.files[0];
+  if(!file)return;
+  if(file.size>2*1024*1024){toast('Image must be under 2MB','err');inp.value='';return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const preview=document.getElementById('le_img_preview');
+    if(preview){preview.src=e.target.result;preview.style.display='block';}
+    try{document.getElementById('le_imageData').value=e.target.result.substring(0,200)+'...';}catch(_){}
+  };
+  reader.readAsDataURL(file);
+}
+
+function prefillFromProProfile(){
+  try{
+    const session=JSON.parse(localStorage.getItem('tn_session')||'{}');
+    if(!session.email)return;
+    const accs=_getAccounts();
+    const acc=accs[session.email];
+    if(!acc)return;
+    const set=(id,v)=>{const el=document.getElementById(id);if(el&&!el.value&&v)el.value=v;};
+    set('le_biz',acc.businessName);
+    set('le_contact',acc.name);
+    set('le_email',acc.email);
+    set('le_phone',acc.phone);
+    set('le_ig',acc.instagram);
+    set('le_web',acc.website);
+  }catch(_){}
+}
+
+function getDeviceType(){
+  const ua=navigator.userAgent.toLowerCase();
+  const mobile=/mobile|android|iphone|ipod/.test(ua);
+  const tablet=/ipad|android(?!.*mobile)/.test(ua);
+  return{device:tablet?'tablet':mobile?'mobile':'desktop',os:ua.includes('iphone')||ua.includes('ipad')?'ios':ua.includes('android')?'android':'other'};
+}
+
 function openListEvent(){
   closeOverlay('communityOverlay');
+  leSetStep(1);
   openOverlay('listEventOverlay');
-  // Default date to today
   const d = document.getElementById('le_date');
   if(d && !d.value) d.value = new Date().toISOString().split('T')[0];
+  prefillFromProProfile();
+  autosaveDraft('listEventForm','_leDraft');
+  if(restoreDraft('listEventForm','_leDraft')) toast('Draft restored','ok');
 }
 
 async function submitListEvent(e){
@@ -5296,6 +5926,10 @@ async function submitListEvent(e){
   const btn   = document.getElementById('leSubmitBtn');
   const label = document.getElementById('leSubmitLabel');
 
+  const consent = document.getElementById('le_consent');
+  if(!consent||!consent.checked){toast('Please accept the terms to submit','err');return;}
+
+  const _dt = getDeviceType();
   const data = {
     source:       'pro-event-submission',
     businessName: document.getElementById('le_biz').value.trim(),
@@ -5315,7 +5949,10 @@ async function submitListEvent(e){
     instagram:    document.getElementById('le_ig').value.trim(),
     website:      document.getElementById('le_web').value.trim(),
     submittedAt:  new Date().toISOString(),
-    userAgent:    navigator.userAgent
+    userAgent:    navigator.userAgent,
+    deviceType:   _dt.device,
+    os:           _dt.os,
+    timestamp:    Date.now()
   };
 
   // Save locally first (never lose a submission)
@@ -5323,6 +5960,8 @@ async function submitListEvent(e){
     const q = JSON.parse(localStorage.getItem('_leQueue')||'[]');
     q.push(data);
     localStorage.setItem('_leQueue', JSON.stringify(q));
+    // Clear draft now that we've saved the real submission
+    localStorage.removeItem('_leDraft');
   }catch(_){}
 
   btn.disabled = true;
@@ -5364,7 +6003,9 @@ function openDeal(p){
   const colors = {'FREE ENTRY':'#00d084','FREE IN':'#00d084','FREE DRINKS':'#ec4899','50% OFF':'#ff6b35','2-FOR-1':'#a855f7','30% OFF':'#3b82f6'};
   const color = p.badgeColor || colors[p.discount] || '#f5c842';
   const badge = document.getElementById('dealBadge');
-  const code = 'TN-' + Math.random().toString(36).substr(2,4).toUpperCase() + '-' + Math.random().toString(36).substr(2,4).toUpperCase();
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const seg=n=>[...Array(n)].map(()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+  const code = 'TN-'+seg(4)+'-'+seg(4);
   if(badge){ badge.textContent = p.discount || 'DEAL'; badge.style.background = color; badge.style.color = (color==='#f5c842'?'#000':'#fff'); }
   const el = id => document.getElementById(id);
   if(el('dealTitle')) el('dealTitle').textContent = p.title || 'Special Offer';
@@ -5372,6 +6013,35 @@ function openDeal(p){
   if(el('dealCode'))  el('dealCode').textContent  = code;
   if(el('dealWindow')) el('dealWindow').textContent = p.startTime && p.endTime ? p.startTime+'–'+p.endTime : 'tonight';
   openOverlay('dealOverlay');
+
+  // Render QR code into deal modal (lazy-load QR lib first)
+  window._loadQR().then(()=>{
+    const wrap = document.getElementById('dealQrWrap');
+    if(!wrap) return;
+    wrap.innerHTML = '';
+    const canvas = document.createElement('canvas');
+    wrap.appendChild(canvas);
+    if(typeof QRCode !== 'undefined'){
+      QRCode.toCanvas(canvas, 'TONIGHT-DEAL:'+code, {width:160,margin:1,color:{dark:'#000',light:'#fff'}}, ()=>{
+        canvas.style.borderRadius='10px';
+        canvas.style.display='block';
+      });
+    } else {
+      // Fallback: use qrserver.com image
+      const img=document.createElement('img');
+      img.src='https://api.qrserver.com/v1/create-qr-code/?size=160x160&data='+encodeURIComponent('TONIGHT-DEAL:'+code);
+      img.style.borderRadius='10px';img.style.display='block';
+      wrap.appendChild(img);
+    }
+  });
+
+  // Log deal claim to Sheets (fire-and-forget)
+  if(COMMUNITY_WEBHOOK && COMMUNITY_WEBHOOK!=='YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL'){
+    const _dt=getDeviceType();
+    fetch(COMMUNITY_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({source:'deal-claim',code,dealTitle:p.title||'',venueName:p.venueName||'',city:p.city||'',discount:p.discount||'',deviceType:_dt.device})
+    }).catch(()=>{});
+  }
 }
 
 function openDealDirections(){
