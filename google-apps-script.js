@@ -1,33 +1,22 @@
 // ============================================================
-// Tonight App — Master Webhook
-// Handles: guestlist joins, community sign-ups, event listings,
-//          pro sign-ups, deal claims — saves to Sheets + emails guest
-//
-// SETUP (one time):
-//  1. Go to script.google.com → New project → paste this whole file
-//  2. Replace SHEET_ID with your Google Sheet ID
-//     (from URL: docs.google.com/spreadsheets/d/SHEET_ID/edit)
-//  3. Deploy → New deployment → Web app
-//     - Execute as: Me
-//     - Who has access: Anyone
-//  4. Copy Web App URL → paste into index.html as COMMUNITY_WEBHOOK
-//  5. On first POST it will ask for Gmail permission — click Allow
+// Tonight App — Master Webhook (Rhino + V8 compatible)
+// No template literals — works on legacy Apps Script runtime
 // ============================================================
 
-const SHEET_ID    = 'YOUR_GOOGLE_SHEET_ID_HERE'; // ← replace with your Sheet ID
-const ADMIN_EMAIL = 'app.tonight1@gmail.com';     // ← your admin email for alerts
-const APP_NAME    = 'Tonight Vietnam';
-const APP_URL     = 'https://www.tonightvietnam.com';
+var SHEET_ID    = 'YOUR_GOOGLE_SHEET_ID_HERE'; // ← replace
+var ADMIN_EMAIL = 'app.tonight1@gmail.com';
+var APP_NAME    = 'Tonight Vietnam';
+var APP_URL     = 'https://www.tonightvietnam.com';
 
 // ── Router ───────────────────────────────────────────────────
 function doPost(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
+    var data = JSON.parse(e.postData.contents);
     switch (data.source) {
       case 'guestlist-join':
         saveGuestlistJoin(data);
-        sendGuestlistConfirmation(data);   // QR email to guest
-        sendGuestlistAlert(data);          // alert to admin
+        sendGuestlistConfirmation(data);
+        sendGuestlistAlert(data);
         break;
       case 'pro-event-submission':
         saveProEvent(data);
@@ -55,352 +44,225 @@ function doGet() {
   return jsonOk({ status: 'ok', service: 'Tonight Webhook', time: new Date().toISOString() });
 }
 
+// ── Email layout helpers ─────────────────────────────────────
+function emailHeader() {
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>' +
+    '<body style="margin:0;padding:0;background:#0a0b14;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;">' +
+    '<table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0b14;padding:32px 0"><tr><td align="center">' +
+    '<table width="520" cellpadding="0" cellspacing="0" style="background:#0f1020;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);max-width:520px;width:100%">' +
+    '<tr><td style="background:linear-gradient(135deg,#0a1828,#0d2040);padding:28px 32px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.07)">' +
+    '<div style="font-size:28px;font-weight:900;letter-spacing:4px;color:#f5c842;font-family:Georgia,serif">TONIGHT</div>' +
+    '<div style="font-size:11px;letter-spacing:3px;color:rgba(255,255,255,0.4);margin-top:4px;text-transform:uppercase">Vietnam &middot; Southeast Asia</div>' +
+    '</td></tr>';
+}
+
+function emailFooter(note) {
+  return '<tr><td style="background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.06);padding:18px 32px;text-align:center">' +
+    '<div style="font-size:11px;color:rgba(255,255,255,0.25);line-height:1.7">' + (note || '') +
+    '<br/><a href="' + APP_URL + '" style="color:rgba(255,255,255,0.35)">' + APP_URL + '</a>' +
+    '</div></td></tr></table></td></tr></table></body></html>';
+}
+
+function stepCircle(n, color) {
+  var c = color || '#f5c842';
+  var bg = color === '#00d084' ? 'rgba(0,208,132,0.15)' : 'rgba(245,200,66,0.15)';
+  var border = color === '#00d084' ? 'rgba(0,208,132,0.3)' : 'rgba(245,200,66,0.3)';
+  return '<div style="width:22px;height:22px;border-radius:50%;background:' + bg + ';border:1px solid ' + border + ';text-align:center;line-height:22px;font-size:11px;font-weight:700;color:' + c + '">' + n + '</div>';
+}
+
+function qrBox(qrUrl, codeText, caption) {
+  return '<tr><td style="padding:0 32px 24px;text-align:center">' +
+    '<div style="background:#ffffff;border-radius:12px;padding:20px;display:inline-block;margin:0 auto">' +
+    '<img src="' + qrUrl + '" width="220" height="220" alt="QR Code" style="display:block;border-radius:4px"/>' +
+    '<div style="margin-top:10px;font-size:10px;font-weight:700;letter-spacing:1.5px;color:#666;font-family:monospace">' + codeText + '</div>' +
+    '</div>' +
+    '<div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:12px">' + caption + '</div>' +
+    '</td></tr>';
+}
+
 // ═══════════════════════════════════════════════════════════════
 // GUESTLIST JOINS
 // ═══════════════════════════════════════════════════════════════
-const GL_TAB = 'Guestlist Joins';
-const GL_HEADERS = [
-  'Timestamp', 'Ref', 'Status',
-  'Guest Name', 'Email', 'Phone',
-  'Event', 'Date', 'Venue', 'City',
-  'Ticket Type', 'Guests (qty)',
-  'Device', 'Source'
-];
+var GL_TAB = 'Guestlist Joins';
+var GL_HEADERS = ['Timestamp','Ref','Status','Guest Name','Email','Phone','Event','Date','Venue','City','Ticket Type','Guests (qty)','Device','Source'];
 
 function saveGuestlistJoin(data) {
-  const ss  = SpreadsheetApp.openById(SHEET_ID);
-  let   tab = ss.getSheetByName(GL_TAB);
+  var ss  = SpreadsheetApp.openById(SHEET_ID);
+  var tab = ss.getSheetByName(GL_TAB);
   if (!tab) {
     tab = ss.insertSheet(GL_TAB);
     tab.appendRow(GL_HEADERS);
-    tab.getRange(1, 1, 1, GL_HEADERS.length)
-       .setFontWeight('bold')
-       .setBackground('#0a1828')
-       .setFontColor('#00d084');
+    tab.getRange(1,1,1,GL_HEADERS.length).setFontWeight('bold').setBackground('#0a1828').setFontColor('#00d084');
     tab.setFrozenRows(1);
-    tab.setColumnWidth(1, 160);
-    tab.setColumnWidth(4, 160);
-    tab.setColumnWidth(5, 200);
-    tab.setColumnWidth(7, 200);
+    tab.setColumnWidth(1,160); tab.setColumnWidth(4,160); tab.setColumnWidth(5,200); tab.setColumnWidth(7,200);
   }
   tab.appendRow([
-    new Date(),
-    data.ref            || '',
-    'Valid',
-    data.buyerName      || '',
-    data.buyerEmail     || '',
-    data.buyerPhone     || '',
-    data.eventTitle     || '',
-    data.date           || '',
-    data.venue          || '',
-    data.city           || '',
-    data.ticketType     || 'Guestlist',
-    data.qty            || 1,
-    data.deviceType     || '',
-    data.source         || 'guestlist-join'
+    new Date(), data.ref||'', 'Valid',
+    data.buyerName||'', data.buyerEmail||'', data.buyerPhone||'',
+    data.eventTitle||'', data.date||'', data.venue||'', data.city||'',
+    data.ticketType||'Guestlist', data.qty||1, data.deviceType||'', data.source||'guestlist-join'
   ]);
 }
 
-// Send branded HTML email with QR code to the guest
 function sendGuestlistConfirmation(data) {
   if (!data.buyerEmail) return;
+  var ref       = data.ref        || 'TN-XXXX-XXXX-XXXX';
+  var name      = data.buyerName  || 'Guest';
+  var firstName = name.split(' ')[0];
+  var event     = data.eventTitle || 'Your Event';
+  var date      = data.date       || '';
+  var venue     = data.venue      || '';
+  var city      = data.city       || '';
+  var qty       = data.qty        || 1;
+  var type      = data.ticketType || 'Guestlist';
+  var qrUrl     = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=000000&bgcolor=ffffff&data=' + encodeURIComponent('TONIGHT:' + ref);
+  var subject   = '\uD83C\uDFAB Your Tonight Ticket \u2014 ' + event;
 
-  const ref       = data.ref        || 'TN-XXXX-XXXX-XXXX';
-  const name      = data.buyerName  || 'Guest';
-  const firstName = name.split(' ')[0];
-  const event     = data.eventTitle || 'Your Event';
-  const date      = data.date       || '';
-  const venue     = data.venue      || '';
-  const city      = data.city       || '';
-  const qty       = data.qty        || 1;
-  const type      = data.ticketType || 'Guestlist';
+  var dateRow  = date  ? '<tr><td style="font-size:12px;color:rgba(255,255,255,0.45);padding-right:8px;padding-bottom:5px">\uD83D\uDCC5</td><td style="font-size:13px;color:rgba(255,255,255,0.8);padding-bottom:5px">' + date + '</td></tr>' : '';
+  var venueRow = venue ? '<tr><td style="font-size:12px;color:rgba(255,255,255,0.45);padding-right:8px;padding-bottom:5px">\uD83D\uDCCD</td><td style="font-size:13px;color:rgba(255,255,255,0.8);padding-bottom:5px">' + venue + (city ? ', ' + city : '') + '</td></tr>' : '';
+  var qtyLabel = qty == 1 ? 'person' : 'people';
 
-  // QR image URL — encodes TONIGHT:TN-REF for the scanner to read
-  const qrData    = encodeURIComponent('TONIGHT:' + ref);
-  const qrUrl     = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=000000&bgcolor=ffffff&data=' + qrData;
+  var html = emailHeader() +
+    '<tr><td style="padding:28px 32px 0">' +
+      '<div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:6px">You\'re on the list, ' + firstName + '! \uD83C\uDF89</div>' +
+      '<div style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.6">Your guestlist spot is confirmed. Show the QR code at the door \u2014 staff will scan it to check you in instantly.</div>' +
+    '</td></tr>' +
+    '<tr><td style="padding:20px 32px">' +
+      '<table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(0,208,132,0.07);border:1px solid rgba(0,208,132,0.2);border-radius:10px;padding:16px">' +
+        '<tr><td style="font-size:16px;font-weight:700;color:#fff;padding-bottom:10px">' + event + '</td></tr>' +
+        '<tr><td><table cellpadding="0" cellspacing="0">' +
+          dateRow + venueRow +
+          '<tr><td style="font-size:12px;color:rgba(255,255,255,0.45);padding-right:8px;padding-bottom:5px">\uD83C\uDFAB</td><td style="font-size:13px;color:rgba(255,255,255,0.8);padding-bottom:5px">' + type + ' &times; ' + qty + ' ' + qtyLabel + '</td></tr>' +
+        '</table></td></tr>' +
+      '</table>' +
+    '</td></tr>' +
+    qrBox(qrUrl, ref, 'Show this QR at venue entry &middot; Staff will scan to check you in') +
+    '<tr><td style="padding:0 32px 28px">' +
+      '<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:12px">How it works</div>' +
+      '<table width="100%" cellpadding="0" cellspacing="0">' +
+        '<tr><td width="28" valign="top" style="padding-bottom:10px">' + stepCircle(1) + '</td><td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px;padding-bottom:10px">Save this email or screenshot your QR code</td></tr>' +
+        '<tr><td width="28" valign="top" style="padding-bottom:10px">' + stepCircle(2) + '</td><td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px;padding-bottom:10px">Arrive at the venue and head to the entrance</td></tr>' +
+        '<tr><td width="28" valign="top">' + stepCircle(3,'#00d084') + '</td><td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px">Show your QR \u2014 staff scans and you\'re in \u2713</td></tr>' +
+      '</table>' +
+    '</td></tr>' +
+    emailFooter('This is a free guestlist request \u2014 entry is subject to venue confirmation.<br/>Tonight does not charge for guestlist spots.');
 
-  const subject = '🎟 Your Tonight Ticket — ' + event;
-
-  const html = `
-<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
-<body style="margin:0;padding:0;background:#0a0b14;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0b14;padding:32px 0">
-    <tr><td align="center">
-      <table width="520" cellpadding="0" cellspacing="0" style="background:#0f1020;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);max-width:520px;width:100%">
-
-        <!-- Header -->
-        <tr><td style="background:linear-gradient(135deg,#0a1828,#0d2040);padding:28px 32px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.07)">
-          <div style="font-size:28px;font-weight:900;letter-spacing:4px;color:#f5c842;font-family:Georgia,serif">TONIGHT</div>
-          <div style="font-size:11px;letter-spacing:3px;color:rgba(255,255,255,0.4);margin-top:4px;text-transform:uppercase">Vietnam · Southeast Asia</div>
-        </td></tr>
-
-        <!-- Greeting -->
-        <tr><td style="padding:28px 32px 0">
-          <div style="font-size:20px;font-weight:700;color:#ffffff;margin-bottom:6px">You're on the list, ${firstName}! 🎉</div>
-          <div style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.6">Your guestlist spot is confirmed. Show the QR code at the door — staff will scan it to check you in instantly.</div>
-        </td></tr>
-
-        <!-- Event info bar -->
-        <tr><td style="padding:20px 32px">
-          <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(0,208,132,0.07);border:1px solid rgba(0,208,132,0.2);border-radius:10px;padding:16px">
-            <tr>
-              <td style="font-size:16px;font-weight:700;color:#ffffff;padding-bottom:10px">${event}</td>
-            </tr>
-            <tr><td>
-              <table cellpadding="0" cellspacing="0">
-                ${date   ? `<tr><td style="font-size:12px;color:rgba(255,255,255,0.45);padding-right:8px;padding-bottom:5px">📅</td><td style="font-size:13px;color:rgba(255,255,255,0.8);padding-bottom:5px">${date}</td></tr>` : ''}
-                ${venue  ? `<tr><td style="font-size:12px;color:rgba(255,255,255,0.45);padding-right:8px;padding-bottom:5px">📍</td><td style="font-size:13px;color:rgba(255,255,255,0.8);padding-bottom:5px">${venue}${city ? ', ' + city : ''}</td></tr>` : ''}
-                <tr><td style="font-size:12px;color:rgba(255,255,255,0.45);padding-right:8px;padding-bottom:5px">🎟</td><td style="font-size:13px;color:rgba(255,255,255,0.8);padding-bottom:5px">${type} × ${qty} ${qty == 1 ? 'person' : 'people'}</td></tr>
-              </table>
-            </td></tr>
-          </table>
-        </td></tr>
-
-        <!-- QR Code ticket -->
-        <tr><td style="padding:0 32px 24px;text-align:center">
-          <div style="background:#ffffff;border-radius:12px;padding:20px;display:inline-block;margin:0 auto">
-            <img src="${qrUrl}" width="220" height="220" alt="Your Tonight QR Code" style="display:block;border-radius:4px"/>
-            <div style="margin-top:10px;font-size:10px;font-weight:700;letter-spacing:2px;color:#666;font-family:monospace">${ref}</div>
-          </div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:12px">Show this QR at venue entry · Staff will scan to check you in</div>
-        </td></tr>
-
-        <!-- Steps -->
-        <tr><td style="padding:0 32px 28px">
-          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:12px">How it works</div>
-          <table width="100%" cellpadding="0" cellspacing="0">
-            <tr>
-              <td width="28" valign="top" style="padding-bottom:10px"><div style="width:22px;height:22px;border-radius:50%;background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.3);text-align:center;line-height:22px;font-size:11px;font-weight:700;color:#f5c842">1</div></td>
-              <td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px;padding-bottom:10px">Save this email or screenshot your QR code</td>
-            </tr>
-            <tr>
-              <td width="28" valign="top" style="padding-bottom:10px"><div style="width:22px;height:22px;border-radius:50%;background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.3);text-align:center;line-height:22px;font-size:11px;font-weight:700;color:#f5c842">2</div></td>
-              <td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px;padding-bottom:10px">Arrive at the venue and head to the entrance</td>
-            </tr>
-            <tr>
-              <td width="28" valign="top"><div style="width:22px;height:22px;border-radius:50%;background:rgba(0,208,132,0.15);border:1px solid rgba(0,208,132,0.3);text-align:center;line-height:22px;font-size:11px;font-weight:700;color:#00d084">3</div></td>
-              <td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px">Show your QR — staff scans and you're in ✓</td>
-            </tr>
-          </table>
-        </td></tr>
-
-        <!-- Footer -->
-        <tr><td style="background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.06);padding:18px 32px;text-align:center">
-          <div style="font-size:11px;color:rgba(255,255,255,0.25);line-height:1.7">
-            This is a free guestlist request — entry is subject to venue confirmation.<br>
-            Tonight does not charge for guestlist spots.<br>
-            <a href="${APP_URL}" style="color:rgba(255,255,255,0.35)">${APP_URL}</a>
-          </div>
-        </td></tr>
-
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`;
-
-  MailApp.sendEmail({
-    to:       data.buyerEmail,
-    subject:  subject,
-    htmlBody: html,
-    name:     APP_NAME
-  });
+  MailApp.sendEmail({ to: data.buyerEmail, subject: subject, htmlBody: html, name: APP_NAME });
 }
 
 function sendGuestlistAlert(data) {
-  const subject = `🎟 New Guestlist Join: ${data.buyerName || '?'} → ${data.eventTitle || '?'}`;
-  const body = `
-New guestlist registration on Tonight Vietnam.
-
-GUEST
-  Name   : ${data.buyerName  || '—'}
-  Email  : ${data.buyerEmail || '—'}
-  Phone  : ${data.buyerPhone || '—'}
-
-EVENT
-  Title  : ${data.eventTitle || '—'}
-  Date   : ${data.date       || '—'}
-  Venue  : ${data.venue      || '—'}
-  City   : ${data.city       || '—'}
-
-TICKET
-  Type   : ${data.ticketType || 'Guestlist'}
-  Guests : ${data.qty        || 1}
-  Ref    : ${data.ref        || '—'}
-
-Device   : ${data.deviceType || '—'}
-Time     : ${new Date().toLocaleString()}
-`.trim();
+  var subject = 'New Guestlist Join: ' + (data.buyerName||'?') + ' - ' + (data.eventTitle||'?');
+  var body = 'New guestlist registration on Tonight Vietnam.\n\n' +
+    'GUEST\n  Name  : ' + (data.buyerName||'-') + '\n  Email : ' + (data.buyerEmail||'-') + '\n  Phone : ' + (data.buyerPhone||'-') + '\n\n' +
+    'EVENT\n  Title : ' + (data.eventTitle||'-') + '\n  Date  : ' + (data.date||'-') + '\n  Venue : ' + (data.venue||'-') + '\n  City  : ' + (data.city||'-') + '\n\n' +
+    'TICKET\n  Type  : ' + (data.ticketType||'Guestlist') + '\n  Guests: ' + (data.qty||1) + '\n  Ref   : ' + (data.ref||'-') + '\n\n' +
+    'Device: ' + (data.deviceType||'-') + '\nTime  : ' + new Date().toLocaleString();
   MailApp.sendEmail(ADMIN_EMAIL, subject, body);
 }
 
 // ═══════════════════════════════════════════════════════════════
 // DEAL CLAIMS
 // ═══════════════════════════════════════════════════════════════
-const DEAL_TAB     = 'Deal Claims';
-const DEAL_HEADERS = ['Timestamp', 'Code', 'Deal Title', 'Venue', 'City', 'Discount', 'Guest Name', 'Guest Email', 'Device'];
+var DEAL_TAB     = 'Deal Claims';
+var DEAL_HEADERS = ['Timestamp','Code','Deal Title','Venue','City','Discount','Guest Name','Guest Email','Guest Phone','Device'];
 
 function saveDealClaim(data) {
-  const ss  = SpreadsheetApp.openById(SHEET_ID);
-  let   tab = ss.getSheetByName(DEAL_TAB);
+  var ss  = SpreadsheetApp.openById(SHEET_ID);
+  var tab = ss.getSheetByName(DEAL_TAB);
   if (!tab) {
     tab = ss.insertSheet(DEAL_TAB);
     tab.appendRow(DEAL_HEADERS);
-    tab.getRange(1, 1, 1, DEAL_HEADERS.length)
-       .setFontWeight('bold').setBackground('#1a0828').setFontColor('#c084fc');
+    tab.getRange(1,1,1,DEAL_HEADERS.length).setFontWeight('bold').setBackground('#1a0828').setFontColor('#c084fc');
     tab.setFrozenRows(1);
   }
-  tab.appendRow([
-    new Date(),
-    data.code       || '',
-    data.dealTitle  || '',
-    data.venueName  || '',
-    data.city       || '',
-    data.discount   || '',
-    data.guestName  || '',
-    data.guestEmail || '',
-    data.guestPhone || '',
-    data.deviceType || ''
-  ]);
+  tab.appendRow([new Date(), data.code||'', data.dealTitle||'', data.venueName||'', data.city||'', data.discount||'', data.guestName||'', data.guestEmail||'', data.guestPhone||'', data.deviceType||'']);
 }
 
 function sendDealConfirmation(data) {
-  const name      = data.guestName  || 'Guest';
-  const firstName = name.split(' ')[0];
-  const email     = data.guestEmail;
-  const venue     = data.venueName  || '';
-  const city      = data.city       || '';
-  const deal      = data.dealTitle  || 'Special Offer';
-  const discount  = data.discount   || 'DEAL';
-  const window_   = data.startTime && data.endTime ? data.startTime + '–' + data.endTime : 'tonight';
-  const code      = data.code       || '';
-  const qrData    = data.qrData     || ('TONIGHT-DEAL:' + code);
-  const desc      = data.desc       || '';
+  var name      = data.guestName || 'Guest';
+  var firstName = name.split(' ')[0];
+  var email     = data.guestEmail;
+  var venue     = data.venueName || '';
+  var city      = data.city      || '';
+  var deal      = data.dealTitle || 'Special Offer';
+  var discount  = data.discount  || 'DEAL';
+  var window_   = (data.startTime && data.endTime) ? data.startTime + '-' + data.endTime : 'tonight';
+  var code      = data.code   || '';
+  var qrData    = data.qrData || ('TONIGHT-DEAL:' + code);
+  var desc      = data.desc   || '';
+  var qrUrl     = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=000000&bgcolor=ffffff&data=' + encodeURIComponent(qrData);
+  var subject   = '\uD83C\uDFAB Your Tonight Deal \u2014 ' + deal + ' at ' + venue;
 
-  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=000000&bgcolor=ffffff&data=' + encodeURIComponent(qrData);
-  const subject = '🎟 Your Tonight Deal — ' + deal + ' at ' + venue;
+  var venueRow = venue ? '<tr><td style="font-size:12px;color:rgba(255,255,255,0.45);padding-right:8px;padding-bottom:5px">\uD83D\uDCCD</td><td style="font-size:13px;color:rgba(255,255,255,0.8);padding-bottom:5px">' + venue + (city?', '+city:'') + '</td></tr>' : '';
+  var descRow  = desc  ? '<tr><td colspan="2" style="font-size:12px;color:rgba(255,255,255,0.5);padding-top:4px;line-height:1.5">' + desc + '</td></tr>' : '';
+  var arrivalVenue = venue || 'the venue';
 
-  const html = `
-<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
-<body style="margin:0;padding:0;background:#0a0b14;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0b14;padding:32px 0">
-    <tr><td align="center">
-      <table width="520" cellpadding="0" cellspacing="0" style="background:#0f1020;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);max-width:520px;width:100%">
+  var html = emailHeader() +
+    '<tr><td style="padding:28px 32px 0">' +
+      '<div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:6px">Your deal is confirmed, ' + firstName + '! \uD83C\uDF89</div>' +
+      '<div style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.6">Show the QR code at the venue \u2014 staff will scan it to unlock your offer instantly.</div>' +
+    '</td></tr>' +
+    '<tr><td style="padding:20px 32px">' +
+      '<table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(245,200,66,0.07);border:1px solid rgba(245,200,66,0.2);border-radius:10px;padding:16px">' +
+        '<tr><td style="padding-bottom:10px"><span style="display:inline-block;background:#f5c842;color:#000;font-size:12px;font-weight:900;letter-spacing:1.5px;padding:4px 12px;border-radius:20px">' + discount + '</span></td></tr>' +
+        '<tr><td style="font-size:16px;font-weight:700;color:#fff;padding-bottom:10px">' + deal + '</td></tr>' +
+        '<tr><td><table cellpadding="0" cellspacing="0">' +
+          venueRow +
+          '<tr><td style="font-size:12px;color:rgba(255,255,255,0.45);padding-right:8px;padding-bottom:5px">\uD83D\uDD50</td><td style="font-size:13px;color:rgba(255,255,255,0.8);padding-bottom:5px">Valid ' + window_ + '</td></tr>' +
+          descRow +
+        '</table></td></tr>' +
+      '</table>' +
+    '</td></tr>' +
+    qrBox(qrUrl, code, 'Show this QR at the venue &middot; Staff scans to confirm your deal') +
+    '<tr><td style="padding:0 32px 28px">' +
+      '<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:12px">How to use</div>' +
+      '<table width="100%" cellpadding="0" cellspacing="0">' +
+        '<tr><td width="28" valign="top" style="padding-bottom:10px">' + stepCircle(1) + '</td><td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px;padding-bottom:10px">Save this email or screenshot the QR code</td></tr>' +
+        '<tr><td width="28" valign="top" style="padding-bottom:10px">' + stepCircle(2) + '</td><td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px;padding-bottom:10px">Arrive at ' + arrivalVenue + ' during the valid window</td></tr>' +
+        '<tr><td width="28" valign="top">' + stepCircle(3,'#00d084') + '</td><td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px">Show QR to staff \u2014 they scan and your deal is unlocked \u2713</td></tr>' +
+      '</table>' +
+    '</td></tr>' +
+    emailFooter('This deal is subject to venue availability and confirmation.<br/>Tonight does not charge for deals or offers.');
 
-        <!-- Header -->
-        <tr><td style="background:linear-gradient(135deg,#0a1828,#0d2040);padding:28px 32px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.07)">
-          <div style="font-size:28px;font-weight:900;letter-spacing:4px;color:#f5c842;font-family:Georgia,serif">TONIGHT</div>
-          <div style="font-size:11px;letter-spacing:3px;color:rgba(255,255,255,0.4);margin-top:4px;text-transform:uppercase">Vietnam · Southeast Asia</div>
-        </td></tr>
-
-        <!-- Greeting -->
-        <tr><td style="padding:28px 32px 0">
-          <div style="font-size:20px;font-weight:700;color:#ffffff;margin-bottom:6px">Your deal is confirmed, ${firstName}! 🎉</div>
-          <div style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.6">Show the QR code at the venue — staff will scan it to unlock your offer instantly.</div>
-        </td></tr>
-
-        <!-- Deal info -->
-        <tr><td style="padding:20px 32px">
-          <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(245,200,66,0.07);border:1px solid rgba(245,200,66,0.2);border-radius:10px;padding:16px">
-            <tr><td style="padding-bottom:10px">
-              <span style="display:inline-block;background:#f5c842;color:#000;font-size:12px;font-weight:900;letter-spacing:1.5px;padding:4px 12px;border-radius:20px">${discount}</span>
-            </td></tr>
-            <tr><td style="font-size:16px;font-weight:700;color:#ffffff;padding-bottom:10px">${deal}</td></tr>
-            <tr><td>
-              <table cellpadding="0" cellspacing="0">
-                ${venue ? `<tr><td style="font-size:12px;color:rgba(255,255,255,0.45);padding-right:8px;padding-bottom:5px">📍</td><td style="font-size:13px;color:rgba(255,255,255,0.8);padding-bottom:5px">${venue}${city ? ', ' + city : ''}</td></tr>` : ''}
-                <tr><td style="font-size:12px;color:rgba(255,255,255,0.45);padding-right:8px;padding-bottom:5px">🕐</td><td style="font-size:13px;color:rgba(255,255,255,0.8);padding-bottom:5px">Valid ${window_}</td></tr>
-                ${desc ? `<tr><td colspan="2" style="font-size:12px;color:rgba(255,255,255,0.5);padding-top:4px;line-height:1.5">${desc}</td></tr>` : ''}
-              </table>
-            </td></tr>
-          </table>
-        </td></tr>
-
-        <!-- QR Code -->
-        <tr><td style="padding:0 32px 24px;text-align:center">
-          <div style="background:#ffffff;border-radius:12px;padding:20px;display:inline-block;margin:0 auto">
-            <img src="${qrUrl}" width="220" height="220" alt="Your Deal QR Code" style="display:block;border-radius:4px"/>
-            <div style="margin-top:10px;font-size:10px;font-weight:700;letter-spacing:1.5px;color:#666;font-family:monospace">${code}</div>
-          </div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:12px">Show this QR at the venue · Staff scans to confirm your deal</div>
-        </td></tr>
-
-        <!-- Steps -->
-        <tr><td style="padding:0 32px 28px">
-          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:12px">How to use</div>
-          <table width="100%" cellpadding="0" cellspacing="0">
-            <tr>
-              <td width="28" valign="top" style="padding-bottom:10px"><div style="width:22px;height:22px;border-radius:50%;background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.3);text-align:center;line-height:22px;font-size:11px;font-weight:700;color:#f5c842">1</div></td>
-              <td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px;padding-bottom:10px">Save this email or screenshot the QR code</td>
-            </tr>
-            <tr>
-              <td width="28" valign="top" style="padding-bottom:10px"><div style="width:22px;height:22px;border-radius:50%;background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.3);text-align:center;line-height:22px;font-size:11px;font-weight:700;color:#f5c842">2</div></td>
-              <td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px;padding-bottom:10px">Arrive at ${venue || 'the venue'} during the valid window</td>
-            </tr>
-            <tr>
-              <td width="28" valign="top"><div style="width:22px;height:22px;border-radius:50%;background:rgba(0,208,132,0.15);border:1px solid rgba(0,208,132,0.3);text-align:center;line-height:22px;font-size:11px;font-weight:700;color:#00d084">3</div></td>
-              <td style="font-size:13px;color:rgba(255,255,255,0.65);padding-left:10px">Show QR to staff — they scan and your deal is unlocked ✓</td>
-            </tr>
-          </table>
-        </td></tr>
-
-        <!-- Footer -->
-        <tr><td style="background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.06);padding:18px 32px;text-align:center">
-          <div style="font-size:11px;color:rgba(255,255,255,0.25);line-height:1.7">
-            This deal is subject to venue availability and confirmation.<br>
-            Tonight does not charge for deals or offers.<br>
-            <a href="${APP_URL}" style="color:rgba(255,255,255,0.35)">${APP_URL}</a>
-          </div>
-        </td></tr>
-
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`;
-
-  MailApp.sendEmail({ to: email, subject, htmlBody: html, name: APP_NAME });
+  MailApp.sendEmail({ to: email, subject: subject, htmlBody: html, name: APP_NAME });
 }
 
 // ═══════════════════════════════════════════════════════════════
 // COMMUNITY SIGN-UPS
 // ═══════════════════════════════════════════════════════════════
-const TAB_NAME = 'Tonight Community';
-const HEADERS  = ['Timestamp','Full Name','Phone','Email','City','Genre 1','Genre 2','Genre 3','Message','Source','User Agent'];
+var TAB_NAME = 'Tonight Community';
+var HEADERS  = ['Timestamp','Full Name','Phone','Email','City','Genre 1','Genre 2','Genre 3','Message','Source','User Agent'];
 
 function saveToSheet(data) {
-  const ss  = SpreadsheetApp.openById(SHEET_ID);
-  let   tab = ss.getSheetByName(TAB_NAME);
+  var ss  = SpreadsheetApp.openById(SHEET_ID);
+  var tab = ss.getSheetByName(TAB_NAME);
   if (!tab) {
     tab = ss.insertSheet(TAB_NAME);
     tab.appendRow(HEADERS);
-    tab.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold').setBackground('#0a0b14').setFontColor('#f5c842');
+    tab.getRange(1,1,1,HEADERS.length).setFontWeight('bold').setBackground('#0a0b14').setFontColor('#f5c842');
     tab.setFrozenRows(1);
   }
-  const genres = data.genres || [];
-  tab.appendRow([new Date(), data.name||'', data.phone||'', data.email||'', data.city||'', genres[0]||'', genres[1]||'', genres[2]||'', data.message||'', data.source||'tonight-app', data.userAgent||'']);
+  var genres = data.genres || [];
+  tab.appendRow([new Date(),data.name||'',data.phone||'',data.email||'',data.city||'',genres[0]||'',genres[1]||'',genres[2]||'',data.message||'',data.source||'tonight-app',data.userAgent||'']);
   tab.autoResizeColumns(1, HEADERS.length);
 }
 
 function sendAlert(data) {
-  const subject = `🎉 New Tonight sign-up: ${data.name || 'Unknown'} — ${data.city || '?'}`;
+  var subject = 'New Tonight sign-up: ' + (data.name||'Unknown') + ' - ' + (data.city||'?');
+  var genres  = (data.genres||[]).join(', ') || '-';
   MailApp.sendEmail(ADMIN_EMAIL, subject,
-    `Name: ${data.name||'—'}\nPhone: ${data.phone||'—'}\nEmail: ${data.email||'—'}\nCity: ${data.city||'—'}\nGenres: ${(data.genres||[]).join(', ')||'—'}\nTime: ${new Date().toLocaleString()}`);
+    'Name: '+(data.name||'-')+'\nPhone: '+(data.phone||'-')+'\nEmail: '+(data.email||'-')+'\nCity: '+(data.city||'-')+'\nGenres: '+genres+'\nTime: '+new Date().toLocaleString());
 }
 
 // ═══════════════════════════════════════════════════════════════
 // PRO EVENT SUBMISSIONS
 // ═══════════════════════════════════════════════════════════════
-const PRO_TAB     = 'Pro Event Submissions';
-const PRO_HEADERS = ['Timestamp','Status','Business Name','Venue Type','City','Address','Event Title','Date','Doors Open','Genre','Capacity','Description','Special Offer','Contact Name','Phone','Email','Instagram','Website','Submitted At'];
+var PRO_TAB     = 'Pro Event Submissions';
+var PRO_HEADERS = ['Timestamp','Status','Business Name','Venue Type','City','Address','Event Title','Date','Doors Open','Genre','Capacity','Description','Special Offer','Contact Name','Phone','Email','Instagram','Website','Submitted At'];
 
 function saveProEvent(data) {
-  const ss  = SpreadsheetApp.openById(SHEET_ID);
-  let   tab = ss.getSheetByName(PRO_TAB);
+  var ss  = SpreadsheetApp.openById(SHEET_ID);
+  var tab = ss.getSheetByName(PRO_TAB);
   if (!tab) {
     tab = ss.insertSheet(PRO_TAB);
     tab.appendRow(PRO_HEADERS);
@@ -412,20 +274,20 @@ function saveProEvent(data) {
 }
 
 function sendProAlert(data) {
-  const subject = `🎉 New Event Submission: ${data.eventTitle||'?'} — ${data.city||'?'}`;
+  var subject = 'New Event Submission: ' + (data.eventTitle||'?') + ' - ' + (data.city||'?');
   MailApp.sendEmail(ADMIN_EMAIL, subject,
-    `BUSINESS: ${data.businessName||'—'} (${data.venueType||'—'})\nEVENT: ${data.eventTitle||'—'}\nDATE: ${data.date||'—'} at ${data.doorsOpen||'—'}\nCITY: ${data.city||'—'}\nCONTACT: ${data.contactName||'—'} · ${data.phone||'—'} · ${data.email||'—'}\n\nSubmitted: ${new Date().toLocaleString()}\n→ Review in Google Sheets.`);
+    'BUSINESS: '+(data.businessName||'-')+' ('+data.venueType+')\nEVENT: '+(data.eventTitle||'-')+'\nDATE: '+(data.date||'-')+' at '+(data.doorsOpen||'-')+'\nCITY: '+(data.city||'-')+'\nCONTACT: '+(data.contactName||'-')+' - '+(data.phone||'-')+' - '+(data.email||'-')+'\n\nSubmitted: '+new Date().toLocaleString());
 }
 
 // ═══════════════════════════════════════════════════════════════
 // PRO ACCOUNT SIGN-UPS
 // ═══════════════════════════════════════════════════════════════
-const PRO_SIGNUP_TAB     = 'Pro Account Sign-Ups';
-const PRO_SIGNUP_HEADERS = ['Timestamp','Name','Business Name','Email','Source','User Agent'];
+var PRO_SIGNUP_TAB     = 'Pro Account Sign-Ups';
+var PRO_SIGNUP_HEADERS = ['Timestamp','Name','Business Name','Email','Source','User Agent'];
 
 function saveProSignup(data) {
-  const ss  = SpreadsheetApp.openById(SHEET_ID);
-  let   tab = ss.getSheetByName(PRO_SIGNUP_TAB);
+  var ss  = SpreadsheetApp.openById(SHEET_ID);
+  var tab = ss.getSheetByName(PRO_SIGNUP_TAB);
   if (!tab) {
     tab = ss.insertSheet(PRO_SIGNUP_TAB);
     tab.appendRow(PRO_SIGNUP_HEADERS);
@@ -436,8 +298,9 @@ function saveProSignup(data) {
 }
 
 function sendProSignupAlert(data) {
-  MailApp.sendEmail(ADMIN_EMAIL, `🏢 New Business Sign-Up: ${data.name||'?'} — ${data.businessName||'?'}`,
-    `Name: ${data.name||'—'}\nBusiness: ${data.businessName||'—'}\nEmail: ${data.email||'—'}\nTime: ${new Date().toLocaleString()}`);
+  MailApp.sendEmail(ADMIN_EMAIL,
+    'New Business Sign-Up: ' + (data.name||'?') + ' - ' + (data.businessName||'?'),
+    'Name: '+(data.name||'-')+'\nBusiness: '+(data.businessName||'-')+'\nEmail: '+(data.email||'-')+'\nTime: '+new Date().toLocaleString());
 }
 
 // ── Helper ────────────────────────────────────────────────────
