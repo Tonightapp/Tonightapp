@@ -2189,22 +2189,39 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
       <div class="deal-modal-venue" id="dealVenue">Venue · City</div>
     </div>
     <div style="padding:20px 24px calc(24px + env(safe-area-inset-bottom))">
-      <div class="deal-code-box">
-        <div class="deal-code-label">Your Deal QR — Show at the door</div>
-        <div id="dealQrWrap" style="display:flex;justify-content:center;margin:10px 0 6px"></div>
-        <div class="deal-code" id="dealCode" style="font-size:13px;letter-spacing:2px;margin-bottom:2px">TN-DEAL-0000</div>
-        <div class="deal-code-sub">Valid <span id="dealWindow">tonight</span> · Tap to save · Free to claim</div>
+
+      <!-- STATE 1: Claim form -->
+      <div id="dealClaimForm">
+        <p id="dealDesc" style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px"></p>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:14px;letter-spacing:.4px">Valid <span id="dealWindow">tonight</span> · Free to claim</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+          <input class="fi" id="dealClaimName" placeholder="Your name *" autocomplete="name" style="font-size:14px"/>
+          <input class="fi" id="dealClaimPhone" placeholder="Phone / WhatsApp (optional)" type="tel" autocomplete="tel" style="font-size:14px"/>
+        </div>
+        <button class="fsub" onclick="claimDeal()" style="margin:0 0 16px;width:100%;font-size:15px">Get My QR Code →</button>
+        <div class="deal-steps">
+          <div class="deal-step"><span class="deal-step-n">1</span><span>Enter your name and tap Get QR</span></div>
+          <div class="deal-step"><span class="deal-step-n">2</span><span>Go to the venue during the valid window</span></div>
+          <div class="deal-step"><span class="deal-step-n">3</span><span>Show QR to staff — they scan to confirm</span></div>
+        </div>
       </div>
-      <div class="deal-steps">
-        <div class="deal-step"><span class="deal-step-n">1</span><span>Save or screenshot this screen</span></div>
-        <div class="deal-step"><span class="deal-step-n">2</span><span>Go to the venue during the valid window</span></div>
-        <div class="deal-step"><span class="deal-step-n">3</span><span>Show this code to staff at the door</span></div>
+
+      <!-- STATE 2: Personal QR (shown after claim) -->
+      <div id="dealQrSection" style="display:none">
+        <div class="deal-code-box">
+          <div class="deal-code-label">Your Personal QR — Show at the door</div>
+          <div id="dealClaimNameDisplay" style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;letter-spacing:.3px"></div>
+          <div id="dealQrWrap" style="display:flex;justify-content:center;margin:10px 0 6px"></div>
+          <div class="deal-code" id="dealCode" style="font-size:12px;letter-spacing:1.5px;margin-bottom:2px">—</div>
+          <div class="deal-code-sub">Screenshot to save · One use only</div>
+        </div>
+        <button class="deal-directions-btn" id="dealDirectionsBtn" onclick="openDealDirections()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+          Get Directions
+        </button>
+        <p class="deal-disclaimer">Offer subject to venue availability and confirmation. Tonight is an information platform and does not guarantee deal redemption. Terms set by venue.</p>
       </div>
-      <button class="deal-directions-btn" id="dealDirectionsBtn" onclick="openDealDirections()">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
-        Get Directions
-      </button>
-      <p class="deal-disclaimer">Offer subject to venue availability and confirmation. Tonight is an information platform and does not guarantee deal redemption. Terms set by venue.</p>
+
     </div>
   </div>
 </div>
@@ -4617,7 +4634,13 @@ function showPro(page,el){
     <div class="dsec"><h3>📷 Camera Scanner</h3>
       <p style="font-size:13px;color:var(--text2);font-weight:300;margin-bottom:16px;line-height:1.7">Point camera at guest's QR code. Guest profile and ticket info appear instantly — no manual lookup needed.</p>
       <div class="scanner-wrap">
-        <div class="scanner-video-wrap" id="scannerWrap">
+        <!-- Tap-to-start overlay (visible by default — required for iPhone) -->
+        <div id="scanStartOverlay" style="width:100%;max-width:380px;aspect-ratio:1;border-radius:14px;background:#0a0b14;border:2px dashed rgba(255,255,255,.15);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer" onclick="startScanner()">
+          <div style="font-size:48px;opacity:.7">📷</div>
+          <div style="font-size:16px;font-weight:700;color:#fff">Tap to Start Camera</div>
+          <div style="font-size:11px;color:var(--text3);text-align:center;padding:0 24px;line-height:1.6">Allow camera access when prompted.<br>iPhone: use Safari for best results.</div>
+        </div>
+        <div class="scanner-video-wrap" id="scannerWrap" style="display:none">
           <video id="scannerVideo" autoplay playsinline muted></video>
           <div class="scanner-frame">
             <div class="scan-corner tl"></div><div class="scan-corner tr"></div>
@@ -4630,8 +4653,7 @@ function showPro(page,el){
           <span style="width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1s infinite"></span>SCANNING — READY
         </div>
         <div style="display:flex;gap:10px;width:100%;max-width:420px">
-          <button class="fsub" id="scanStartBtn" onclick="startScanner()" style="margin:0;display:none">Start Camera</button>
-          <button class="btn btn-ghost" id="scanStopBtn" onclick="stopScanner()" style="display:none;flex:1">■ Stop</button>
+          <button class="btn btn-ghost" id="scanStopBtn" onclick="stopScanner()" style="display:none;flex:1">■ Stop Camera</button>
         </div>
         <p style="font-size:11px;color:var(--text3);font-weight:300;text-align:center">Tap the client card to dismiss · Auto-clears after 4s</p>
       </div>
@@ -4658,7 +4680,6 @@ function showPro(page,el){
         :`<div style="color:var(--text3);font-size:13px;padding:12px 0;text-align:center">No scans yet this session</div>`}
       </div>
     </div>`;
-    setTimeout(()=>startScanner(), 150);
   }
   if(page==='billing'){m.innerHTML=`
     <div class="dhead"><h2>Billing</h2></div>
@@ -5084,34 +5105,53 @@ const _scanCtx=_scanCanvas.getContext('2d');
 
 function startScanner(){
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
-    toast('Camera not supported on this browser','err'); return;
+    const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+    toast(isIOS?'Use Safari on iPhone for camera access':'Camera not supported on this browser','err');
+    return;
   }
-  if(scanStream) return; // already running
-  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}}).then(stream=>{
+  if(scanStream) return;
+  // Hide tap overlay, show video
+  const overlay=document.getElementById('scanStartOverlay');
+  const wrap=document.getElementById('scannerWrap');
+  if(overlay) overlay.style.display='none';
+  if(wrap) wrap.style.display='';
+  navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}}}).then(stream=>{
     scanStream=stream;
     const video=document.getElementById('scannerVideo');
     if(!video){stopScanner();return;}
     video.srcObject=stream;
-    video.play();
-    const sb=document.getElementById('scanStartBtn');
+    video.play().catch(()=>{});
     const sb2=document.getElementById('scanStopBtn');
     const si=document.getElementById('scanIndicator');
-    if(sb) sb.style.display='none';
     if(sb2) sb2.style.display='';
     if(si) si.style.display='flex';
     const res=document.getElementById('scanResult');
     if(res){res.style.display='none';res.innerHTML='';}
     lastScan=''; lastScanTime=0;
     scanLoop();
-  }).catch(err=>{toast('Camera denied — '+err.message,'err');});
+  }).catch(err=>{
+    // Camera denied — show tap overlay again
+    const overlay=document.getElementById('scanStartOverlay');
+    const wrap=document.getElementById('scannerWrap');
+    if(overlay) overlay.style.display='';
+    if(wrap) wrap.style.display='none';
+    const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+    if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError'){
+      toast(isIOS?'Camera blocked — go to Settings → Safari → Camera → Allow':'Camera permission denied — check browser settings','err');
+    } else {
+      toast('Camera error: '+err.message,'err');
+    }
+  });
 }
 function stopScanner(){
   if(scanStream){scanStream.getTracks().forEach(t=>t.stop());scanStream=null;}
   cancelAnimationFrame(scanAnimFrame); scanAnimFrame=null;
-  const sb=document.getElementById('scanStartBtn');
+  const overlay=document.getElementById('scanStartOverlay');
+  const wrap=document.getElementById('scannerWrap');
   const sb2=document.getElementById('scanStopBtn');
   const si=document.getElementById('scanIndicator');
-  if(sb) sb.style.display='';
+  if(overlay) overlay.style.display='';
+  if(wrap) wrap.style.display='none';
   if(sb2) sb2.style.display='none';
   if(si) si.style.display='none';
 }
@@ -5143,6 +5183,43 @@ function _scanAutoReset(delay){
 function processScan(data){
   const res=document.getElementById('scanResult');
   if(!res) return;
+  // Handle deal claim QR: TONIGHT-DEAL:VENUE|CODE|Name|Phone
+  if(data.startsWith('TONIGHT-DEAL:')){
+    const parts=data.replace('TONIGHT-DEAL:','').split('|');
+    const venue=(parts[0]||'—').replace(/-/g,' ');
+    const code=parts[1]||'—';
+    const name=parts[2]||'Guest';
+    const phone=parts[3]||'';
+    const init=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const scanLog=JSON.parse(sessionStorage.getItem('_scanLog')||'[]');
+    scanLog.unshift({name:name+' (deal)',time:new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}),ok:true});
+    if(scanLog.length>20)scanLog.pop();
+    sessionStorage.setItem('_scanLog',JSON.stringify(scanLog));
+    res.style.display='block'; res.className='';
+    res.innerHTML=`
+      <div class="scan-client-card" style="border-color:rgba(245,200,66,.35)">
+        <div class="scan-client-top">
+          <div class="scan-client-av" style="background:rgba(245,200,66,.15);color:#f5c842;font-size:18px">🎟</div>
+          <div class="scan-client-info">
+            <div class="scan-client-name">${name}</div>
+            ${phone?`<div class="scan-client-phone">📱 ${phone}</div>`:''}
+            <div class="scan-client-badges">
+              <span class="scan-badge" style="background:rgba(245,200,66,.15);color:#f5c842;border-color:rgba(245,200,66,.3)">✓ Deal Valid</span>
+            </div>
+          </div>
+        </div>
+        <div class="scan-ticket-strip">
+          <div class="scan-tfield"><div class="scan-tfield-label">Venue</div><div class="scan-tfield-val">${venue}</div></div>
+          <div class="scan-tfield"><div class="scan-tfield-label">Code</div><div class="scan-tfield-val" style="font-size:10px;color:var(--text3)">${code}</div></div>
+          <div class="scan-tfield"><div class="scan-tfield-label">Scanned</div><div class="scan-tfield-val">${new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</div></div>
+        </div>
+        <div style="padding:10px 16px;font-size:11px;color:var(--text3);text-align:center">Tap to dismiss</div>
+      </div>`;
+    res.querySelector('.scan-client-card').addEventListener('click',()=>{res.style.display='none';res.innerHTML='';});
+    toast('🎟 '+name+' — deal confirmed','ok');
+    _scanAutoReset(5000);
+    return;
+  }
   // parse TONIGHT:TN-XXXX-XXXX-XXXX
   let ref=null;
   if(data.startsWith('TONIGHT:')){ref=data.split(':')[1];}
@@ -6003,43 +6080,66 @@ function openDeal(p){
   const colors = {'FREE ENTRY':'#00d084','FREE IN':'#00d084','FREE DRINKS':'#ec4899','50% OFF':'#ff6b35','2-FOR-1':'#a855f7','30% OFF':'#3b82f6'};
   const color = p.badgeColor || colors[p.discount] || '#f5c842';
   const badge = document.getElementById('dealBadge');
-  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  const seg=n=>[...Array(n)].map(()=>chars[Math.floor(Math.random()*chars.length)]).join('');
-  const code = 'TN-'+seg(4)+'-'+seg(4);
   if(badge){ badge.textContent = p.discount || 'DEAL'; badge.style.background = color; badge.style.color = (color==='#f5c842'?'#000':'#fff'); }
   const el = id => document.getElementById(id);
   if(el('dealTitle')) el('dealTitle').textContent = p.title || 'Special Offer';
   if(el('dealVenue')) el('dealVenue').textContent = (p.venueName||'') + (p.city?' · '+p.city:'');
-  if(el('dealCode'))  el('dealCode').textContent  = code;
+  if(el('dealDesc'))  el('dealDesc').textContent  = p.desc || p.description || '';
   if(el('dealWindow')) el('dealWindow').textContent = p.startTime && p.endTime ? p.startTime+'–'+p.endTime : 'tonight';
+  // Reset to claim form state
+  const cf=document.getElementById('dealClaimForm'), qs=document.getElementById('dealQrSection');
+  if(cf) cf.style.display='';
+  if(qs) qs.style.display='none';
+  const ni=document.getElementById('dealClaimName'), pi=document.getElementById('dealClaimPhone');
+  if(ni) ni.value='';
+  if(pi) pi.value='';
+  // Pre-fill name from saved profile
+  try{ const u=JSON.parse(localStorage.getItem('tn_user_profile')||'{}'); if(u.name&&ni) ni.value=u.name; }catch(e){}
   openOverlay('dealOverlay');
+}
 
-  // Render QR code into deal modal (lazy-load QR lib first)
+function claimDeal(){
+  const p = _activeDeal;
+  if(!p) return;
+  const ni=document.getElementById('dealClaimName'), pi=document.getElementById('dealClaimPhone');
+  const name=(ni?.value||'').trim();
+  if(!name){ if(ni)ni.focus(); toast('Please enter your name','err'); return; }
+  const phone=(pi?.value||'').trim();
+  // Build personalised QR data: TONIGHT-DEAL:VENUE-SLUG|CODE|Name|Phone
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const seg=n=>[...Array(n)].map(()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+  const venueSlug=(p.venueName||'VENUE').toUpperCase().replace(/[^A-Z0-9]/g,'-').replace(/-+/g,'-').slice(0,12);
+  const code=venueSlug+'-'+seg(4)+'-'+seg(4);
+  const qrData='TONIGHT-DEAL:'+venueSlug+'|'+code+'|'+name+(phone?'|'+phone:'');
+  // Switch view
+  const cf=document.getElementById('dealClaimForm'), qs=document.getElementById('dealQrSection');
+  if(cf) cf.style.display='none';
+  if(qs) qs.style.display='';
+  const nd=document.getElementById('dealClaimNameDisplay'), cd=document.getElementById('dealCode');
+  if(nd) nd.textContent=name+(phone?' · '+phone:'');
+  if(cd) cd.textContent=code;
+  // Render QR
   window._loadQR().then(()=>{
-    const wrap = document.getElementById('dealQrWrap');
+    const wrap=document.getElementById('dealQrWrap');
     if(!wrap) return;
-    wrap.innerHTML = '';
-    const canvas = document.createElement('canvas');
+    wrap.innerHTML='';
+    const canvas=document.createElement('canvas');
     wrap.appendChild(canvas);
-    if(typeof QRCode !== 'undefined'){
-      QRCode.toCanvas(canvas, 'TONIGHT-DEAL:'+code, {width:160,margin:1,color:{dark:'#000',light:'#fff'}}, ()=>{
-        canvas.style.borderRadius='10px';
-        canvas.style.display='block';
-      });
+    if(typeof QRCode!=='undefined'){
+      QRCode.toCanvas(canvas,qrData,{width:180,margin:1,color:{dark:'#000',light:'#fff'}},()=>{canvas.style.borderRadius='10px';});
     } else {
-      // Fallback: use qrserver.com image
       const img=document.createElement('img');
-      img.src='https://api.qrserver.com/v1/create-qr-code/?size=160x160&data='+encodeURIComponent('TONIGHT-DEAL:'+code);
-      img.style.borderRadius='10px';img.style.display='block';
+      img.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(qrData);
+      img.style.cssText='border-radius:10px;display:block';
       wrap.appendChild(img);
     }
   });
-
-  // Log deal claim to Sheets (fire-and-forget)
-  if(COMMUNITY_WEBHOOK && COMMUNITY_WEBHOOK!=='YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL'){
+  toast('QR code ready — screenshot to save','ok');
+  // Log to Sheets
+  if(COMMUNITY_WEBHOOK&&COMMUNITY_WEBHOOK!=='YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL'){
     const _dt=getDeviceType();
     fetch(COMMUNITY_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({source:'deal-claim',code,dealTitle:p.title||'',venueName:p.venueName||'',city:p.city||'',discount:p.discount||'',deviceType:_dt.device})
+      body:JSON.stringify({source:'deal-claim',code,dealTitle:p.title||'',venueName:p.venueName||'',city:p.city||'',discount:p.discount||'',guestName:name,guestPhone:phone,deviceType:_dt.device})
     }).catch(()=>{});
   }
 }
