@@ -2212,9 +2212,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 2
       <div id="dealQrSection" style="display:none">
         <div class="deal-code-box">
           <div class="deal-code-label">Your Personal QR — Show at the door</div>
-          <div id="dealClaimNameDisplay" style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;letter-spacing:.3px"></div>
-          <div id="dealQrWrap" style="display:flex;justify-content:center;margin:10px 0 6px">
-            <img id="dealQrImg" src="" alt="Deal QR Code" width="190" height="190" style="border-radius:12px;display:none;background:#fff;padding:10px;box-sizing:border-box"/>
+          <div id="dealClaimNameDisplay" style="font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;word-break:break-word;text-align:center;line-height:1.6"></div>
+          <div id="dealQrWrap" style="display:flex;justify-content:center;align-items:center;margin:12px 0 8px;width:100%">
+            <img id="dealQrImg" src="" alt="Deal QR Code" style="display:none;width:180px;height:180px;border-radius:12px;background:#fff;padding:10px;box-sizing:border-box;flex-shrink:0"/>
           </div>
           <div class="deal-code" id="dealCode" style="font-size:12px;letter-spacing:1.5px;margin-bottom:2px">—</div>
           <div class="deal-code-sub">Screenshot to save · One use only</div>
@@ -6125,7 +6125,7 @@ function claimDeal(){
   if(cf) cf.style.display='none';
   if(qs) qs.style.display='';
   const nd=document.getElementById('dealClaimNameDisplay'), cd=document.getElementById('dealCode');
-  if(nd) nd.textContent=name+(email?' · '+email:'')+(phone?' · '+phone:'');
+  if(nd) nd.innerHTML=name+(email?'<br/><span style="font-size:11px;font-weight:400;color:var(--text3)">'+email+'</span>':'')+(phone?'<br/><span style="font-size:11px;font-weight:400;color:var(--text3)">'+phone+'</span>':'');
   if(cd) cd.textContent=code;
   // Render QR — direct image, no library needed
   const qrImg=document.getElementById('dealQrImg');
