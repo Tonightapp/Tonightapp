@@ -4,7 +4,7 @@
 // ============================================================
 
 var SHEET_ID    = '1EV66PfDw6W0GKXFA3vuR0F-PkvIzM5tDBIY5cJp4b7U';
-var ADMIN_EMAIL = 'app.tonight1@gmail.com';
+var ADMIN_EMAIL = 'lamyasser.anass@gmail.com';
 var APP_NAME    = 'Tonight Vietnam';
 var APP_URL     = 'https://www.tonightvietnam.com';
 
