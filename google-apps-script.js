@@ -14,9 +14,9 @@ function doPost(e) {
     var data = JSON.parse(e.postData.contents);
     switch (data.source) {
       case 'guestlist-join':
-        saveGuestlistJoin(data);
-        sendGuestlistConfirmation(data);
-        sendGuestlistAlert(data);
+        try { saveGuestlistJoin(data); } catch(e) {}
+        try { sendGuestlistConfirmation(data); } catch(e) {}
+        try { sendGuestlistAlert(data); } catch(e) {}
         break;
       case 'pro-event-submission':
         saveProEvent(data);
@@ -27,8 +27,8 @@ function doPost(e) {
         sendProSignupAlert(data);
         break;
       case 'deal-claim':
-        saveDealClaim(data);
-        if (data.guestEmail) sendDealConfirmation(data);
+        try { saveDealClaim(data); } catch(e) {}
+        try { if (data.guestEmail) sendDealConfirmation(data); } catch(e) {}
         break;
       default:
         saveToSheet(data);
