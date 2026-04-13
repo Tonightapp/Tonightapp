@@ -303,6 +303,26 @@ function sendProSignupAlert(data) {
     'Name: '+(data.name||'-')+'\nBusiness: '+(data.businessName||'-')+'\nEmail: '+(data.email||'-')+'\nTime: '+new Date().toLocaleString());
 }
 
+// ── Test — run this manually from the editor to verify email works ──
+function testEmail() {
+  var testData = {
+    guestName:  'Test Guest',
+    guestEmail: ADMIN_EMAIL,
+    guestPhone: '+1234567890',
+    dealTitle:  'Happy Hour Test',
+    venueName:  'The Vault',
+    city:       'Ho Chi Minh City',
+    discount:   '50% OFF',
+    startTime:  '22:00',
+    endTime:    '23:00',
+    desc:       'Test deal claim email.',
+    code:       'THE-VAULT-TEST-1234',
+    qrData:     'TONIGHT-DEAL:THE-VAULT|THE-VAULT-TEST-1234|Test Guest|+1234567890'
+  };
+  sendDealConfirmation(testData);
+  Logger.log('Test email sent to ' + ADMIN_EMAIL);
+}
+
 // ── Helper ────────────────────────────────────────────────────
 function jsonOk(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
