@@ -1,0 +1,130 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper functions ───────────────────────────────────────────────────────
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isStaff() {
+      return isAuthenticated() && getUserRole() == 'staff';
+    }
+
+    function isVenueOwner() {
+      return isAuthenticated() && getUserRole() == 'venue_owner';
+    }
+
+    // ── users/{uid} ────────────────────────────────────────────────────────────
+    match /users/{uid} {
+
+      allow read: if isOwner(uid) || isStaff();
+
+      allow create: if isOwner(uid)
+                    && request.resource.data.role == 'user'
+                    && request.resource.data.keys().hasAll(['email', 'fullName', 'role', 'createdAt']);
+
+      allow update: if isOwner(uid)
+                    && request.resource.data.role == resource.data.role;
+
+      allow delete: if isStaff();
+    }
+
+    // ── venue_requests/{id} ────────────────────────────────────────────────────
+    match /venue_requests/{requestId} {
+
+      allow create: if request.resource.data.keys().hasAll([
+                         'email', 'fullName', 'venueName',
+                         'city', 'venueType', 'description', 'phone',
+                         'status', 'createdAt'
+                       ])
+                    && request.resource.data.status == 'pending';
+
+      allow read: if isStaff()
+                  || (isAuthenticated() && resource.data.userId == request.auth.uid);
+
+      allow update, delete: if isStaff();
+    }
+
+    // ── events/{id} ────────────────────────────────────────────────────────────
+    match /events/{eventId} {
+
+      allow read: if true;
+
+      // Authenticated venue owners (portal) OR unauthenticated app submissions
+      // Either way: status MUST be 'pending' on create — admin approves before going live
+      allow create: if request.resource.data.status == 'pending'
+                    && request.resource.data.keys().hasAll(['title','venueName','date','city','status'])
+                    && (isVenueOwner() || request.auth == null);
+
+      allow update: if (isVenueOwner()
+                        && resource.data.publishedBy == request.auth.uid
+                        && request.resource.data.publishedBy == request.auth.uid)
+                    || isStaff();
+
+      allow delete: if (isVenueOwner() && resource.data.publishedBy == request.auth.uid)
+                    || isStaff();
+    }
+
+    // ── community_signups/{id} ─────────────────────────────────────────────────
+    // Open write: anyone can join the community email list (no auth required)
+    match /community_signups/{id} {
+      allow create: if request.resource.data.keys().hasAll(['fullName','email'])
+                    && request.resource.data.email is string
+                    && request.resource.data.email.size() <= 254;
+      allow read, update, delete: if isStaff();
+    }
+
+    // ── guestlist/{id} ────────────────────────────────────────────────────────
+    // Open write: anyone joining a guestlist (no auth required)
+    match /guestlist/{id} {
+      allow create: if request.resource.data.keys().hasAll(['ref','buyerEmail','eventTitle'])
+                    && request.resource.data.buyerEmail is string;
+      allow read, update, delete: if isStaff();
+    }
+
+    // ── deals/{id} ────────────────────────────────────────────────────────────
+    // Open write: anyone claiming a deal
+    match /deals/{id} {
+      allow create: if request.resource.data.keys().hasAll(['code','dealTitle']);
+      allow read, update, delete: if isStaff();
+    }
+
+    // ── pro_signups/{id} ──────────────────────────────────────────────────────
+    // Open write: business owners signing up
+    match /pro_signups/{id} {
+      allow create: if request.resource.data.keys().hasAll(['name','email'])
+                    && request.resource.data.email is string;
+      allow read, update, delete: if isStaff();
+    }
+
+    // ── inquiries/{id} ─────────────────────────────────────────────────────────
+    match /inquiries/{inquiryId} {
+
+      allow create: if request.resource.data.keys().hasAll([
+                         'name', 'email', 'message', 'type', 'createdAt'
+                       ])
+                    && request.resource.data.type in ['venue', 'general']
+                    && request.resource.data.message.size() <= 2000
+                    && request.resource.data.name.size() <= 200
+                    && request.resource.data.email.size() <= 254;
+
+      allow read, update, delete: if isStaff();
+    }
+
+    // ── Deny everything else ───────────────────────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
